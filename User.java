@@ -1,11 +1,12 @@
 public abstract class User {
     private String userID;
-    private String password = "password";
+    private String password;
     private String faculty;
 
     public User(String userID, String faculty) {
         this.userID = userID;
         this.faculty = faculty;
+        password = "password";
     }
 
     public String getID() {
@@ -13,7 +14,7 @@ public abstract class User {
     }
 
     public boolean checkPassword(String password) {
-        return (this.password == password);
+        return (this.password.equals(password));
     }
 
     public String getFaulty() {
@@ -24,7 +25,5 @@ public abstract class User {
         this.password = password;
     }
 
-    public void menu() {
-        
-    }
+    public void menu(ArrayList<Camp> CampMasterList) {}
 }
