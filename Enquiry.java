@@ -1,9 +1,11 @@
 public class Enquiry {
 	private String question, answer;
+	private Camp sentTo;
 
-	public Enquiry(String question) {
+	public Enquiry(String question, Camp sendTo) {
 		this.question = question;
 		this.answer = null;
+		this.sentTo = sendTo;
 	}
 	
 	public String getQuestion() {
@@ -20,5 +22,9 @@ public class Enquiry {
 	
 	public void setAnswer(String answer) {
 		this.answer = answer;
+	}
+
+	public Camp getSentTo(){
+		return this.sentTo;
 	}
 }
