@@ -2,16 +2,20 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Student extends User {
-    private ArrayList<Camp> registeredCamps = new ArrayList<Camp>();
-    private ArrayList<Camp> withdrawnCamps = new ArrayList<Camp>();
-    private ArrayList<Enquiry> enquiriesMade = new ArrayList<Enquiry>();
-    private ArrayList<Suggestion> suggestionsMade = new ArrayList<Suggestion>();
+    private ArrayList<Camp> registeredCamps;
+    private ArrayList<Camp> withdrawnCamps;
+    private ArrayList<Enquiry> enquiriesMade;
+    private ArrayList<Suggestion> suggestionsMade;
     private Camp committeeOf = null;
     private int point = 0;
 
     //constructor
     public Student(String userID, String faculty) {
         super(userID, faculty);
+        this.registeredCamps = new ArrayList<Camp>();
+        this.withdrawnCamps = new ArrayList<Camp>();
+        this.enquiriesMade = new ArrayList<Enquiry>();
+        this.suggestionsMade = new ArrayList<Suggestion>();
     }
 
     public void addRegisteredCamp(Camp camp) {
@@ -107,42 +111,52 @@ public class Student extends User {
     }
 
     @Override
-    public void menu() {
-        //User details
-        System.out.println("---------------------------------------------");
-        System.out.printf("Username    : %s\n", this.getID());
-        System.out.printf("Faculty     : %s\n", this.getFaculty());
-        if (this.committeeOf != null){
-            System.out.printf("Committe of : %s\n", this.getCommitteeOf().getName());
-            System.out.printf("Points      : %d\n", this.point);
-        }
-        else{
-            System.out.printf("Committe of : No Committee Assigned\n");
-        }
+    public void menu(ArrayList<Camp> CampMasterList){
+        int choice = -1;
 
-        //User options
-        System.out.println("---------------------------------------------");
-        System.out.println("1.  View camps available to you");
-        System.out.println("2.  Register for a camp");
-        System.out.println("3.  View registered camps");
-        System.out.println("4.  Withdraw from a camp");
-        System.out.println("5.  View withdrawn camps");
-        System.out.println("6.  Submit an enquiry");
-        System.out.println("7.  View enquiries");
-        System.out.println("8.  Edit an enquiry");
+        //While not logged out
+        while (choice != 0){
+            //User details
+            System.out.println("---------------------------------------------");
+            System.out.printf("Username    : %s\n", this.getID());
+            System.out.printf("Faculty     : %s\n", this.getFaculty());
+            if (this.committeeOf != null){
+                System.out.printf("Committe of : %s\n", this.getCommitteeOf().getName());
+                System.out.printf("Points      : %d\n", this.point);
+            }
+            else{
+                System.out.printf("Committe of : No Committee Assigned\n");
+            }
 
-        //Committee exclusive options
-        if (this.committeeOf != null){
-            System.out.println("9.  View committee details");
-            System.out.println("10. View enquiries");
-            System.out.println("11. Answer enquiries");
-            System.out.println("12. Submit suggestion");
-            System.out.println("13. View suggestions");
-            System.out.println("14. Edit a suggestion");
-        }
-        System.out.println("---------------------------------------------");
-        System.out.printf("Input an option >>");    
+            //Student options
+            System.out.println("---------------------------------------------");
+            System.out.println("0.  Logout");
+            System.out.println("1.  View camps available to you");
+            System.out.println("2.  Register for a camp");
+            System.out.println("3.  View registered camps");
+            System.out.println("4.  Withdraw from a camp");
+            System.out.println("5.  View withdrawn camps");
+            System.out.println("6.  Submit an enquiry");
+            System.out.println("7.  View enquiries");
+            System.out.println("8.  Edit an enquiry");
+
+            //Committee exclusive options
+            if (this.committeeOf != null){
+                System.out.println("9.  View committee details");
+                System.out.println("10. View enquiries");
+                System.out.println("11. Answer enquiries");
+                System.out.println("12. Submit suggestion");
+                System.out.println("13. View suggestions");
+                System.out.println("14. Edit a suggestion");
+            }
+            System.out.println("---------------------------------------------");
+            System.out.printf("Input an option >>");
+            
+            //SWITCH STATEMENTS
+
+        }  
     }
+
 
     // //main for debugging & testing
     // public static void main(String[] args){
