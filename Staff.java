@@ -1,31 +1,42 @@
 import java.util.ArrayList;
+import java.util.List;
 
-// Staff Class
 public class Staff extends User {
-    private ArrayList<Camp> campsOwned = new ArrayList<>();
 
-    public Staff(String userID, String password, String faculty) {
-        super(userID, password, faculty);
+    private List<Camp> campsOwned;
+
+    public Staff(String userId, String password, String faculty) {
+        super(userId, password, faculty);
+        this.campsOwned = new ArrayList<>();
     }
 
     public void addOwnedCamp(Camp camp) {
         campsOwned.add(camp);
     }
 
-    public void removeOwnedCamps(int index) {
-        if (index >= 0 && index < campsOwned.size()) {
-            campsOwned.remove(index);
+    public boolean removeOwnedCamp(Camp camp) {
+        return campsOwned.remove(camp);
+    }
+
+    public List<Camp> viewOwnedCamps() {
+        return new ArrayList<>(campsOwned);
+    }
+
+    public void replyToInquiry(Inquiry inquiry, String reply) {
+        if (campsOwned.contains(inquiry.getCamp()) && !inquiry.isProcessed()) {
+            inquiry.setReply(reply);
+            inquiry.setProcessed(true);
         }
     }
 
-    public void viewOwnedCamps() {
-        for (Camp camp : campsOwned) {
-            System.out.println(camp);
+    public void reviewSuggestion(Suggestion suggestion, boolean approve) {
+        if (campsOwned.contains(suggestion.getCamp())) {
+            suggestion.setApproved(approve);
         }
     }
 
-    @Override
-    public void menu() {
-        // Implement the menu here
+    public void generateReport() {
     }
+
+
 }
