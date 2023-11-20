@@ -1,11 +1,10 @@
 public abstract class User {
     private String userID;
-    private String password;
+    private String password = "password";
     private String faculty;
 
-    public User(String userID, String password, String faculty) {
+    public User(String userID, String faculty) {
         this.userID = userID;
-        this.password = password;
         this.faculty = faculty;
     }
 
