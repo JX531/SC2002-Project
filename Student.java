@@ -2,10 +2,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Student extends User {
-    private ArrayList<Camp> registeredCamps = new ArrayList<>();
-    private ArrayList<Camp> withdrawnCamps = new ArrayList<>();
-    private ArrayList<Enquiry> enquiriesMade = new ArrayList<>();
-    private ArrayList<Suggestion> suggestionsMade = new ArrayList<>();
+    private ArrayList<Camp> registeredCamps = new ArrayList<Camp>();
+    private ArrayList<Camp> withdrawnCamps = new ArrayList<Camp>();
+    private ArrayList<Enquiry> enquiriesMade = new ArrayList<Enquiry>();
+    private ArrayList<Suggestion> suggestionsMade = new ArrayList<Suggestion>();
     private Camp committeeOf = null;
     private int point = 0;
 
