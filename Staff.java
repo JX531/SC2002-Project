@@ -5,8 +5,8 @@ public class Staff extends User {
 
     private List<Camp> campsOwned;
 
-    public Staff(String userId, String password, String faculty) {
-        super(userId, password, faculty);
+    public Staff(String userId, String faculty) {
+        super(userId, faculty);
         this.campsOwned = new ArrayList<>();
     }
 
@@ -37,6 +37,3 @@ public class Staff extends User {
 
     public void generateReport() {
     }
-
-
-}
