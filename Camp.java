@@ -137,6 +137,9 @@ public class Camp {
     public void removeSuggestion(Suggestion suggestion){
         this.suggestions.remove(suggestion);
     }
+    public Boolean getVisibility(){
+        return this.visibility;
+    }
     
 }
 
