@@ -1,5 +1,6 @@
 public class Enquiry {
-	String question, answer;
+	private String question, answer;
+
 	public Enquiry(String question) {
 		this.question = question;
 		this.answer = null;
