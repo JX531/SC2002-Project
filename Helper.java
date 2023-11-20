@@ -1,12 +1,15 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Scanner;
 
 public class Helper {
     private static Scanner scanner = new Scanner(System.in);
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
 
     // Reads a string from the user and checks if it's a valid string
     public static String readString(String prompt) {
@@ -34,15 +37,15 @@ public class Helper {
     }
 
     // Reads a date input and parse it to Date object
-    public static Date readDate(String prompt) {
-        Date date = null;
+    public static LocalDate readDate(String prompt) {
+        LocalDate date = null;
         boolean isValid = false;
         while (!isValid) {
             try {
                 System.out.print(prompt);
-                date = dateFormat.parse(scanner.nextLine());
+                date = LocalDate.parse(scanner.nextLine(),dateFormatter);
                 isValid = true;
-            } catch (ParseException e) {
+            } catch (DateTimeParseException e) {
                 System.out.println("Please enter in the format dd/mm/yyyy.");
             }
         }
@@ -64,9 +67,9 @@ public class Helper {
                         .forEach(Helper::printCamp);
                 break;
             case 2:
-                Date startDate = readDate("Enter start date (dd/mm/yyyy): ");
+                LocalDate startDate = readDate("Enter start date (dd-mm-yyyy): ");
                 camps.stream()
-                        .filter(camp -> camp.getStartDate().equals(startDate) || camp.getStartDate().after(startDate))
+                        .filter(camp -> camp.getStarDate().equals(startDate) || camp.getStarDate().isAfter(startDate))
                         .forEach(Helper::printCamp);
                 break;
             default:
@@ -79,7 +82,7 @@ public class Helper {
     private static void printCamp(Camp camp) {
         System.out.println("Camp Name: " + camp.getName());
         System.out.println("Location: " + camp.getLocation());
-        System.out.println("Start Date: " + dateFormat.format(camp.getStartDate()));
+        System.out.println("Start Date: " + dateFormatter.format(camp.getStarDate()));
         // Other details can be added here
     }
     
