@@ -40,7 +40,7 @@ public class Camp {
     this.startDate = startDate;
     this.endDate = endDate;
     this.registerDate = registerDate;
-    this.slot = slot;
+    this.slot = slot-10; //Assume that total slots on creation includes 10 slots for committee
     this.remainingCommittee = 10;
     this.studentList = new ArrayList<Student>();
     this.committee = new ArrayList<Student>();
