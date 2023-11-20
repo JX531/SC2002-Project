@@ -1,6 +1,6 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
-
+import java.util.Scanner;
 public class Student extends User {
     private ArrayList<Camp> registeredCamps;
     private ArrayList<Camp> withdrawnCamps;
@@ -31,12 +31,22 @@ public class Student extends User {
         }
     }
 
-    public void viewRegisteredCamps() {
-        System.out.println("Registered Camps");
-        System.out.println("--------------------");
+    public void viewCamps(ArrayList<Camp> camps, String prefix) {
         int i = 1;
-        for (Camp camp : registeredCamps) {
-            System.out.printf("%d. %s\n",i,camp.getName());
+        System.out.printf("---------------------------------------------------------\n");
+        System.out.printf("%s Camps\n",prefix);
+        for (Camp eachcamp:camps){
+            System.out.printf("---------------------------------------------------------\n");
+            System.out.printf("%d.\n",i);
+            System.out.printf("Name                      : %s\n",eachcamp.getName());
+            System.out.printf("Faculty                   : %s\n",eachcamp.getUserGroup());
+            System.out.printf("Location                  : %s\n",eachcamp.getLocation());
+            System.out.printf("Attendee Slots Remaining  : %s\n",eachcamp.getSlots());
+            System.out.printf("Committee Slots Remaining : %s\n",eachcamp.getRemainingCommittee());
+            System.out.printf("Starts                    : %s\n",eachcamp.getStarDate());
+            System.out.printf("Ends                      : %s\n",eachcamp.getEndDate());
+            System.out.printf("Register before           : %s\n",eachcamp.getRegisterDate());
+            System.out.printf("Description               : %s\n",eachcamp.getDescription());
             i++;
         }
     }
@@ -112,8 +122,18 @@ public class Student extends User {
 
     @Override
     public void menu(ArrayList<Camp> CampMasterList){
+        Helper helper = new Helper();
         int choice = -1;
+        Scanner scan = new Scanner(System.in);
 
+        //Temp list to store camps avaiable to user
+        ArrayList<Camp> available = new ArrayList<Camp>();
+        for (Camp eachcamp : CampMasterList){
+            if (eachcamp.getOwnSchool() == false || eachcamp.getUserGroup().equals(this.getFaculty())){ // If camp is NOT locked to ownschool OR user's faculty matches camp
+                available.add(eachcamp);
+            }
+        }
+        System.out.printf("%d\n",available.size());
         //While not logged out
         while (choice != 0){
             //User details
@@ -153,10 +173,110 @@ public class Student extends User {
             System.out.printf("Input an option >>");
             
             //SWITCH STATEMENTS
+            choice = helper.readInt("");
+            switch(choice){
+                case 0: //Logs out 
+                    break;
+                case 1: //View Camps Available to you  
+                    viewCamps(available, "Available");
+                    break; // View available camps END
 
+                case 2: //Register for a camp
+                    //Show available camps first
+                    viewCamps(available, "Available");
+                    System.out.printf("---------------------------------------------------------\n");
+                    //Select camp to register for
+                    int campindex = helper.readInt("Select Camp to register for : ");
+
+                    if (campindex > 0 && campindex <= available.size()){
+                        //Register as attendee or committee
+                        Camp target = available.get(campindex-1);
+                        System.out.printf("1. Attendee\n");
+                        System.out.printf("2. Committee\n");
+                        int answer = helper.readInt("Register as : ");
+                        if (answer >= 1 && answer <= 2){
+                            switch(answer){
+                                case 1://as attendeee
+                                if (target.getSlots() == 0){ //Attendee slots full
+                                    System.out.println("Camp Attendee slots are full");
+                                }
+                                else{
+                                    if(registeredCamps.contains(target) || withdrawnCamps.contains(target)){//Already registered or withdrawn from camp
+                                        System.out.println("You are already registered or withdrawn from the camp");
+                                    }
+                                    else{
+                                        if(checkClash(target)){//clashes with registered camps
+                                            System.out.println("Camp clashes with a registered camp");
+                                        }
+                                        else{//Register for camp as attendee successfully
+                                            this.registeredCamps.add(target);
+                                            target.addStudent(this);
+                                            System.out.printf("Successfully registered as attendee for camp : %s\n",target.getName());
+                                        }
+                                    }
+                                }
+                                break;
+                                case 2://as committee
+                                if (target.getRemainingCommittee() == 0){ //Attendee slots full
+                                    System.out.println("Camp Committee slots are full");
+                                }
+                                else{
+                                    if(registeredCamps.contains(target) || withdrawnCamps.contains(target)){//Already registered or withdrawn from camp
+                                        System.out.println("You are already registered or withdrawn from the camp");
+                                    }
+                                    else{
+                                        if(checkClash(target)){//clashes with registered camps
+                                            System.out.println("Camp clashes with a registered camp");
+                                        }
+                                        else{//Already a committee member
+                                            if (committeeOf != null){
+                                                System.out.printf("You are already on a committe for camp : %s\n",committeeOf);
+                                            }
+                                            else{//Register for camp as committee successfully
+                                                this.registeredCamps.add(target);
+                                                this.committeeOf = target;
+                                                target.addCommittee(this);
+                                                System.out.printf("Successfully registered as committee for camp : %s\n",target.getName());
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+                        }else{System.out.println("Invalid choice");}
+                    } 
+                    else{System.out.println("Invalid choice");}
+                    break;//Register for camp END
+
+                    case 3://View registered camps
+                    viewCamps(registeredCamps, "Registered");
+                    break; //View registered camps END
+
+                    case 4: // Withdraw from a camp
+                    //Display registered Camps first
+                    viewCamps(registeredCamps, "Registered");
+                    campindex = helper.readInt("Select camp to withdrawn from : ");
+                    if (campindex > 0 && campindex <= registeredCamps.size()){
+                        Camp target = registeredCamps.get(campindex-1);
+                        if (this.committeeOf == target){
+                            System.out.printf("You cannot withdrawn from a camp you are a committee member of\n");
+                        }
+                        else{
+                            target.removeStudent(this); // Remove student from camp first
+                            this.withdrawnCamps.add(target); // add camp to withdrawn list
+                            this.registeredCamps.remove(target); // remove camp from registered list
+                            System.out.printf("Successfully withdrawn from camp : %s\n",target.getName());
+                        }
+                    }
+                    else{System.out.println("Invalid choice");}
+                    break; // withdraw from a camp END
+
+                    case 5://View withdrawn camps
+                    viewCamps(withdrawnCamps, "Withdrawn");
+                    break;//View withdrwan camps END
+            }
         }  
     }
-
 
     // //main for debugging & testing
     // public static void main(String[] args){
