@@ -12,7 +12,7 @@ public class SuggestionManager {
     }
 
     //For committee members (Student class)
-    public static void viewSuggestions(Student user){
+    public static void viewSuggestionsMade(Student user){
         System.out.printf("Suggestions made\n");
         System.out.printf("---------------------------------------------------------\n");
         int i = 1;
