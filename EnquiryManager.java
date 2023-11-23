@@ -85,7 +85,7 @@ public class EnquiryManager {
                 //remove target enquiry from the enquiry list of the camp it was sent to
                 target.getSentTo().removeEnquiry(target);
                 //remove target enquiry from the user's enquiries made list
-                user.getEnquiriesMade().remove(target);
+                user.removeEnquiriesMade(target);
                 System.out.printf("Enquiry successfully deleted\n");
             }
         }
