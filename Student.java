@@ -26,26 +26,6 @@ public class Student extends User {
         this.registeredCamps.remove(camp);
     }
 
-    public void viewCamps(ArrayList<Camp> camps, String prefix) {
-        int i = 1;
-        System.out.printf("---------------------------------------------------------\n");
-        System.out.printf("%s Camps\n",prefix);
-        for (Camp eachcamp:camps){
-            System.out.printf("---------------------------------------------------------\n");
-            System.out.printf("%d.\n",i);
-            System.out.printf("Name                      : %s\n",eachcamp.getName());
-            System.out.printf("Faculty                   : %s\n",eachcamp.getUserGroup());
-            System.out.printf("Location                  : %s\n",eachcamp.getLocation());
-            System.out.printf("Attendee Slots Remaining  : %s\n",eachcamp.getSlots());
-            System.out.printf("Committee Slots Remaining : %s\n",eachcamp.getRemainingCommittee());
-            System.out.printf("Starts                    : %s\n",eachcamp.getStarDate());
-            System.out.printf("Ends                      : %s\n",eachcamp.getEndDate());
-            System.out.printf("Register before           : %s\n",eachcamp.getRegisterDate());
-            System.out.printf("Description               : %s\n",eachcamp.getDescription());
-            i++;
-        }
-    }
-
     public void addWithdrawnCamp(Camp camp) {
         this.withdrawnCamps.add(camp);
     }
@@ -63,7 +43,7 @@ public class Student extends User {
     public ArrayList<Enquiry> getEnquiriesMade(){
         return this.enquiriesMade;
     }
-    
+
     public void setCommitteeOf(Camp camp) {
         this.committeeOf = camp;
     }
@@ -94,7 +74,7 @@ public class Student extends User {
     
 
     //returns true if clash, false if no clash
-    public Boolean checkClash(Camp camp){
+    private Boolean checkClash(Camp camp){
         for (Camp eachcamp : registeredCamps){
             //target camp ends before registered camp starts or target camp starts after registered camp ends
             if (camp.getEndDate().isBefore(eachcamp.getStarDate()) || camp.getStarDate().isAfter(eachcamp.getEndDate())){
@@ -111,11 +91,29 @@ public class Student extends User {
         return false;
     }
 
+    private void viewCamps(ArrayList<Camp> camps, String prefix) {
+        int i = 1;
+        System.out.printf("---------------------------------------------------------\n");
+        System.out.printf("%s Camps\n",prefix);
+        for (Camp eachcamp:camps){
+            System.out.printf("---------------------------------------------------------\n");
+            System.out.printf("%d.\n",i);
+            System.out.printf("Name                      : %s\n",eachcamp.getName());
+            System.out.printf("Faculty                   : %s\n",eachcamp.getUserGroup());
+            System.out.printf("Location                  : %s\n",eachcamp.getLocation());
+            System.out.printf("Attendee Slots Remaining  : %s\n",eachcamp.getSlots());
+            System.out.printf("Committee Slots Remaining : %s\n",eachcamp.getRemainingCommittee());
+            System.out.printf("Starts                    : %s\n",eachcamp.getStarDate());
+            System.out.printf("Ends                      : %s\n",eachcamp.getEndDate());
+            System.out.printf("Register before           : %s\n",eachcamp.getRegisterDate());
+            System.out.printf("Description               : %s\n",eachcamp.getDescription());
+            i++;
+        }
+    }
+
     @Override
     public void menu(ArrayList<Camp> CampMasterList){
         int choice = -1;
-        Scanner scan = new Scanner(System.in);
-
         //Temp list to store camps avaiable to user
         ArrayList<Camp> available = new ArrayList<Camp>();
         for (Camp eachcamp : CampMasterList){
@@ -123,7 +121,7 @@ public class Student extends User {
                 available.add(eachcamp);
             }
         }
-        System.out.printf("%d\n",available.size());
+        System.out.printf("debug size of available list = %d\n",available.size());
         //While not logged out
         while (choice != 0){
             //User details
@@ -141,40 +139,49 @@ public class Student extends User {
             //Student options
             System.out.println("---------------------------------------------");
             System.out.println("0.  Logout");
-            System.out.println("1.  View camps available to you");
-            System.out.println("2.  Register for a camp");
-            System.out.println("3.  View registered camps");
-            System.out.println("4.  Withdraw from a camp");
-            System.out.println("5.  View withdrawn camps");
-            System.out.println("6.  Submit an enquiry");
-            System.out.println("7.  View enquiries made");
-            System.out.println("8.  Edit an enquiry");
-            System.out.println("9.  Delete an enquiry");
+            System.out.println("1.  Change Password");
+            System.out.println("2.  View camps available to you");
+            System.out.println("3.  Register for a camp");
+            System.out.println("4.  View registered camps");
+            System.out.println("5.  Withdraw from a camp");
+            System.out.println("6.  View withdrawn camps");
+            System.out.println("7.  Submit an enquiry");
+            System.out.println("8.  View enquiries made");
+            System.out.println("9.  Edit an enquiry");
+            System.out.println("10.  Delete an enquiry");
 
             //Committee exclusive options
             if (this.committeeOf != null){
-                System.out.println("10. View committee details");
-                System.out.println("11. View camp's enquiries");
-                System.out.println("12. Answer enquiries");
-                System.out.println("13. Submit suggestion");
-                System.out.println("14. View suggestions");
-                System.out.println("15. Edit a suggestion");
-                System.out.println("16. Delete a suggestion");
+                System.out.println("11. View committee details");
+                System.out.println("12. View camp's enquiries");
+                System.out.println("13. Answer enquiries");
+                System.out.println("14. Submit suggestion");
+                System.out.println("15. View suggestions");
+                System.out.println("16. Edit a suggestion");
+                System.out.println("17. Delete a suggestion");
             }
             System.out.println("---------------------------------------------");
             System.out.printf("Input an option >>");
             
             //SWITCH STATEMENTS
             choice = Helper.readInt("");
+            if (this.committeeOf == null && choice >=11){
+                System.out.printf("Invalid option\n");
+            }
             switch(choice){
                 case 0: //Logs out 
                 break;
 
-                case 1: //View Camps Available to you  
+                case 1://change password
+                String new_password = Helper.readString("Input new password : ");
+                this.setPassword(new_password);
+                System.out.printf("Password successfully changed\n");
+                break;
+                case 2: //View Camps Available to you  
                 viewCamps(available, "Available");
                 break; // View available camps END
 
-                case 2: //Register for a camp
+                case 3: //Register for a camp
                 //Show available camps first
                 viewCamps(available, "Available");
                 System.out.printf("---------------------------------------------------------\n");
@@ -226,11 +233,11 @@ public class Student extends User {
                 else{System.out.println("Invalid choice");}
                 break;//Register for camp END
 
-                case 3://View registered camps
+                case 4://View registered camps
                 viewCamps(registeredCamps, "Registered");
                 break; //View registered camps END
 
-                case 4: // Withdraw from a camp
+                case 5: // Withdraw from a camp
                 //Display registered Camps first
                 viewCamps(registeredCamps, "Registered");
                 
@@ -251,73 +258,85 @@ public class Student extends User {
                 else{System.out.println("Invalid choice");}
                 break; // withdraw from a camp END
 
-                case 5://View withdrawn camps
+                case 6://View withdrawn camps
                 viewCamps(withdrawnCamps, "Withdrawn");
                 break;//View withdrwan camps END
 
-                case 6://Submit Enquiry
+                case 7://Submit Enquiry
                 //Show camps to submit enquiries to
                 viewCamps(CampMasterList, "All");
                 EnquiryManager.submitEnquiry(this, CampMasterList);
                 break; //submit enquiry END
 
-                case 7: //View Enquries Made
+                case 8: //View Enquries Made
                 EnquiryManager.viewEnquiriesMade(this);
                 break; //View Enquiries END
 
-                case 8://Edit enquiry
+                case 9://Edit enquiry
                 //Show enquiries first
                 EnquiryManager.viewEnquiriesMade(this);
                 EnquiryManager.editEnquiry(this);
 
                 break;//Edit Enquire END
 
-                case 9://Delete enquiry
+                case 10://Delete enquiry
                 //Show enquiries first
                 EnquiryManager.viewEnquiriesMade(this);
                 EnquiryManager.deleteEnquiry(this);
                 break; //Delete enquiry END
 
-                case 10: // View Committe Details
-                int i = 1;
-                for (Student eachStudent : this.committeeOf.getCommitteeList()){
-                    System.out.printf("---------------------------------------------------------\n");
-                    System.out.printf("Committee List\n");
-                    System.out.printf("%d. %s\n",i, eachStudent.getID());
-                    i++;
+                case 11: // View Committe Details
+                if(this.committeeOf !=null){
+                    int i = 1;
+                    for (Student eachStudent : this.committeeOf.getCommitteeList()){
+                        System.out.printf("---------------------------------------------------------\n");
+                        System.out.printf("Committee List\n");
+                        System.out.printf("%d. %s\n",i, eachStudent.getID());
+                        i++;
+                    }
                 }
                 break; // View Committee Details END
 
-                case 11: // View Enquiry made to your camp
-                EnquiryManager.viewCampEnquiries(this);
+                case 12: // View Enquiry made to your camp
+                if(this.committeeOf !=null){
+                    EnquiryManager.viewCampEnquiries(this);
+                }
                 break; //View Enquiry of camp END
 
-                case 12: // Answer Enquiry
+                case 13: // Answer Enquiry
                 //First show enquiries made to your camp
-                EnquiryManager.viewCampEnquiries(this);
-                EnquiryManager.answerEnquiry(this);
-                
-
+                if(this.committeeOf !=null){
+                    EnquiryManager.viewCampEnquiries(this);
+                    EnquiryManager.answerEnquiry(this);
+                }
                 break; // Answer Enquiry End
 
-                case 13://Submit suggestion
-                SuggestionManager.submitSuggestion(this);
+                case 14://Submit suggestion
+                if(this.committeeOf !=null){
+                    SuggestionManager.submitSuggestion(this);
+                }
                 break; // Submit suggestion END
 
-                case 14://View suggestions made
-                SuggestionManager.viewSuggestions(this);
+                case 15://View suggestions made
+                if(this.committeeOf !=null){
+                    SuggestionManager.viewSuggestions(this);
+                }
                 break; //View suggestions made END
 
-                case 15://Edit Suggestion
+                case 16://Edit Suggestion
                 //Show suggestions made first
-                SuggestionManager.viewSuggestions(this);
-                SuggestionManager.editSuggestion(this);
+                if(this.committeeOf !=null){
+                    SuggestionManager.viewSuggestions(this);
+                    SuggestionManager.editSuggestion(this);
+                }
                 break;//Edit suggestion END
 
-                case 16://Delete Suggestion
+                case 17://Delete Suggestion
                 //Show suggestions made first
-                SuggestionManager.viewSuggestions(this);
-                SuggestionManager.deleteSuggestion(this);
+                if(this.committeeOf !=null){
+                    SuggestionManager.viewSuggestions(this);
+                    SuggestionManager.deleteSuggestion(this);
+                }
                 break;
                 
             }   
