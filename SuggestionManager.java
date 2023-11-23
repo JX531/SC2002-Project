@@ -67,7 +67,7 @@ public class SuggestionManager {
                 //remove target suggestion from the suggestion list of the camp the user is committee in
                 user.getCommitteeOf().removeSuggestion(target);
                 //remove target suggestion from the user's suggestions made list
-                user.getSuggestionsMade().remove(target);
+                user.removeSuggestionsMade(target);
                 System.out.printf("Successfully deleted suggestion\n");
             }
         }
