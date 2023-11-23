@@ -102,6 +102,13 @@ public class Student extends User {
         }
     }
 
+    public ArrayList<Suggestion> getSuggestionsMade(){
+        return this.suggestionsMade;
+    }
+    public ArrayList<Enquiry> getEnquiriesMade(){
+        return this.enquiriesMade;
+    }
+
     //returns true if clash, false if no clash
     public Boolean checkClash(Camp camp){
         for (Camp eachcamp : registeredCamps){
@@ -128,7 +135,7 @@ public class Student extends User {
         //Temp list to store camps avaiable to user
         ArrayList<Camp> available = new ArrayList<Camp>();
         for (Camp eachcamp : CampMasterList){
-            if (eachcamp.getOwnSchool() == false || eachcamp.getUserGroup().equals(this.getFaculty())){ // If camp is NOT locked to ownschool OR user's faculty matches camp
+            if ((eachcamp.getOwnSchool() == false || eachcamp.getUserGroup().equals(this.getFaculty())) && (eachcamp.getVisibility())){ // If camp is NOT locked to ownschool OR user's faculty matches camp AND is visible
                 available.add(eachcamp);
             }
         }
@@ -193,60 +200,44 @@ public class Student extends User {
                 if (campindex > 0 && campindex <= available.size()){
                     //Register as attendee or committee
                     Camp target = available.get(campindex-1);
-                    System.out.printf("1. Attendee\n");
-                    System.out.printf("2. Committee\n");
-                    int answer = Helper.readInt("Register as : ");
-                    if (answer >= 1 && answer <= 2){
-                        switch(answer){
-                            case 1://as attendeee
-                            if (target.getSlots() == 0){ //Attendee slots full
-                                System.out.println("Camp Attendee slots are full");
-                            }
+                    if (LocalDate.now().isAfter(target.getRegisterDate())){System.out.println("The registration date for this camp has passed");}
+                    else{
+                        if(this.withdrawnCamps.contains(target) || this.registeredCamps.contains(target)){System.out.println("You have already registered or withdrawn from this camp");}
+                        else{
+                            if(checkClash(target)){System.out.println("The camp clashes with your registered camps");}
                             else{
-                                if(registeredCamps.contains(target) || withdrawnCamps.contains(target)){//Already registered or withdrawn from camp
-                                    System.out.println("You are already registered or withdrawn from the camp");
-                                }
-                                else{
-                                    if(checkClash(target)){//clashes with registered camps
-                                        System.out.println("Camp clashes with a registered camp");
-                                    }
-                                    else{//Register for camp as attendee successfully
+                                System.out.printf("1. Attendee\n");
+                                System.out.printf("2. Committee\n");
+                                int answer = Helper.readInt("Register as : ");
+                                if (answer >= 1 && answer <= 2){
+                                    switch(answer){
+                                    case 1://as attendeee
+                                    if (target.getSlots() == 0){System.out.println("Attendee slots for this camp are full");}
+                                    else{
                                         this.registeredCamps.add(target);
                                         target.addStudent(this);
-                                        System.out.printf("Successfully registered as attendee for camp : %s\n",target.getName());
+                                        System.out.printf("Successfully registered as attendee for : %s\n",target.getName());
                                     }
-                                }
-                            }
-                            break;
-                            case 2://as committee
-                            if (target.getRemainingCommittee() == 0){ //Attendee slots full
-                                System.out.println("Camp Committee slots are full");
-                            }
-                            else{
-                                if(registeredCamps.contains(target) || withdrawnCamps.contains(target)){//Already registered or withdrawn from camp
-                                    System.out.println("You are already registered or withdrawn from the camp");
-                                }
-                                else{
-                                    if(checkClash(target)){//clashes with registered camps
-                                        System.out.println("Camp clashes with a registered camp");
-                                    }
-                                    else{//Already a committee member
-                                        if (committeeOf != null){
-                                            System.out.printf("You are already on a committe for camp : %s\n",committeeOf.getName());
-                                        }
-                                        else{//Register for camp as committee successfully
-                                            this.registeredCamps.add(target);
+                                    break;
+                                    case 2://as committee
+                                    if (this.committeeOf != null){System.out.println("You are already in the committee of a camp");}
+                                    else{
+                                        if (target.getRemainingCommittee() == 0){System.out.println("Committee slots for this camp are full");}
+                                        else{
                                             this.committeeOf = target;
                                             target.addCommittee(this);
-                                            System.out.printf("Successfully registered as committee for camp : %s\n",target.getName());
+                                            System.out.printf("Successfully registered as committee member for : %s\n",target.getName());
                                         }
                                     }
+                                    break;
+                                    }   
                                 }
+                                else{System.out.println("Invalid choice");}
                             }
-                            break;
                         }
                     }
-                    else{System.out.println("Invalid choice");}
+                    
+                    
                 } 
                 else{System.out.println("Invalid choice");}
                 break;//Register for camp END
@@ -283,100 +274,28 @@ public class Student extends User {
                 case 6://Submit Enquiry
                 //Show camps to submit enquiries to
                 viewCamps(CampMasterList, "All");
-                
-                int campIndex = Helper.readInt("Select Camp to send Enquiry to : ");
-                System.out.printf("---------------------------------------------------------\n");
-                if (campIndex >0 && campIndex <= CampMasterList.size()){
-                    Camp target = CampMasterList.get(campIndex-1);
-                    //create new enquiry
-                    Enquiry new_enquiry = new Enquiry(Helper.readString("Input Enquiry : "), target);
-                    target.addEnquiry(new_enquiry);
-                    this.enquiriesMade.add(new_enquiry);
-                    System.out.printf("Successfully sent Enquiry to : %s\n", target.getName());
-                }
-                else{System.out.println("Invalid choice");}
+                EnquiryManager.submitEnquiry(this, CampMasterList);
                 break; //submit enquiry END
 
                 case 7: //View Enquries Made
-                int i = 1;
-                
-                System.out.printf("Enquiries Made\n");
-                System.out.printf("---------------------------------------------------------\n");
-                for (Enquiry eachEnquiry : enquiriesMade){
-                    System.out.printf("%d.\n",i);
-                    System.out.printf("Sent to  : %s\n", eachEnquiry.getSentTo().getName());
-                    System.out.printf("Question : %s\n", eachEnquiry.getQuestion());
-                    System.out.printf("Answer   : %s\n", eachEnquiry.getAnswer());
-                    i++;
-                }
+                EnquiryManager.viewEnquiriesMade(this);
                 break; //View Enquiries END
 
                 case 8://Edit enquiry
                 //Show enquiries first
-                i = 1;
-                
-                System.out.printf("Enquiries Made\n");
-                System.out.printf("---------------------------------------------------------\n");
-                for (Enquiry eachEnquiry : enquiriesMade){
-                    System.out.printf("%d.\n",i);
-                    System.out.printf("Sent to  : %s\n", eachEnquiry.getSentTo().getName());
-                    System.out.printf("Question : %s\n", eachEnquiry.getQuestion());
-                    System.out.printf("Answer   : %s\n", eachEnquiry.getAnswer());
-                    i++;
-                }
-                
-                int enquiryIndex = Helper.readInt("Select Enquiry to edit : ");
-                System.out.printf("---------------------------------------------------------\n");
-                //edit the enquiry
-                if (enquiryIndex > 0 && enquiryIndex <=enquiriesMade.size()){
-                    Enquiry target = enquiriesMade.get(enquiryIndex-1);
-                    if (target.getAnswer() != null){
-                        System.out.printf("Enquiry has already be answered, unable to edit\n");
-                    }
-                    else{
-                        String new_question = Helper.readString("Input new question : ");
-                        target.setQuestion(new_question);
-                        System.out.printf("Successfully editted enquiry\n");
-                    }
-                }
-                else{System.out.println("Invalid choice");}
+                EnquiryManager.viewEnquiriesMade(this);
+                EnquiryManager.editEnquiry(this);
 
                 break;//Edit Enquire END
 
                 case 9://Delete enquiry
                 //Show enquiries first
-                i = 1;
-                
-                System.out.printf("Enquiries Made\n");
-                System.out.printf("---------------------------------------------------------\n");
-                for (Enquiry eachEnquiry : enquiriesMade){
-                    System.out.printf("%d.\n",i);
-                    System.out.printf("Sent to  : %s\n", eachEnquiry.getSentTo().getName());
-                    System.out.printf("Question : %s\n", eachEnquiry.getQuestion());
-                    System.out.printf("Answer   : %s\n", eachEnquiry.getAnswer());
-                    i++;
-                }
-                
-                enquiryIndex = Helper.readInt("Select Enquiry to delete : ");
-                System.out.printf("---------------------------------------------------------\n");
-                //delete the suggestion
-                if (enquiryIndex > 0 && enquiryIndex <=enquiriesMade.size()){
-                    Enquiry target = enquiriesMade.get(enquiryIndex-1);
-                    if (target.getAnswer() != null){
-                        System.out.printf("Enquiry has already been answered, unable to delete\n");
-                    }
-                    else{
-                        target.getSentTo().removeEnquiry(target);
-                        this.enquiriesMade.remove(target);
-                        System.out.printf("Enquiry successfully deleted\n");
-                    }
-                }
-                else{System.out.println("Invalid choice");}
-
+                EnquiryManager.viewEnquiriesMade(this);
+                EnquiryManager.deleteEnquiry(this);
                 break; //Delete enquiry END
 
                 case 10: // View Committe Details
-                i = 1;
+                int i = 1;
                 for (Student eachStudent : this.committeeOf.getCommitteeList()){
                     System.out.printf("---------------------------------------------------------\n");
                     System.out.printf("Committee List\n");
@@ -385,115 +304,38 @@ public class Student extends User {
                 }
                 break; // View Committee Details END
 
-                case 11: // View Enquiry of camp
-                i = 1;
-                System.out.printf("Enquiries made to : %s\n", this.committeeOf.getName());
-                System.out.printf("---------------------------------------------------------\n");
-                for (Enquiry eachEnquiry : this.committeeOf.getEnquiries()){
-                    System.out.printf("%d. %s\n",i, eachEnquiry.getQuestion());
-                    System.out.printf("Answer   : %s\n", eachEnquiry.getAnswer());
-                    i++;
-                }
+                case 11: // View Enquiry made to your camp
+                EnquiryManager.viewCampEnquiries(this);
                 break; //View Enquiry of camp END
 
                 case 12: // Answer Enquiry
                 //First show enquiries made to your camp
-                i = 1;
-                System.out.printf("Enquiries made to : %s\n", this.committeeOf.getName());
-                System.out.printf("---------------------------------------------------------\n");
-                for (Enquiry eachEnquiry : this.committeeOf.getEnquiries()){
-                    System.out.printf("%d.\n",i);
-                    System.out.printf("Question : %s\n", eachEnquiry.getQuestion());
-                    System.out.printf("Answer   : %s\n", eachEnquiry.getAnswer());
-                    i++;
-                }
+                EnquiryManager.viewCampEnquiries(this);
+                EnquiryManager.answerEnquiry(this);
                 
-                enquiryIndex = Helper.readInt("Select Enquiry to answer : ");
-                System.out.printf("---------------------------------------------------------\n");
-                //answer the suggestion
-                if ( enquiryIndex > 0 && enquiryIndex <= this.committeeOf.getEnquiries().size()){
-                    Enquiry target = this.committeeOf.getEnquiries().get(enquiryIndex-1);
-                    if (target.getAnswer() != null){
-                        System.out.printf("Enquiry has already been answered\n");
-                    }
-                    else{
-                        target.setAnswer(Helper.readString("Input answer to enquiry : "));
-                        System.out.printf("---------------------------------------------------------\n");
-                        System.out.printf("Successfully answered enquiry : %s\n",target.getQuestion());
-                    }
-                }
-                else{System.out.println("Invalid choice");}
 
                 break; // Answer Enquiry End
 
                 case 13://Submit suggestion
-                Suggestion new_suggestion = new Suggestion(Helper.readString("Input suggestion : "), this);
-                this.committeeOf.addSuggestion(new_suggestion);
-                this.suggestionsMade.add(new_suggestion);
+                SuggestionManager.submitSuggestion(this);
                 break; // Submit suggestion END
 
                 case 14://View suggestions made
-                System.out.printf("Suggestions made\n");
-                System.out.printf("---------------------------------------------------------\n");
-                i = 1;
-                for (Suggestion eachSuggestion:suggestionsMade){
-                    System.out.printf("%d. %s\n", i, eachSuggestion.getSuggestion());
-                    System.out.printf("Approved : %s\n", eachSuggestion.getApproved());
-                }
+                SuggestionManager.viewSuggestions(this);
                 break; //View suggestions made END
 
                 case 15://Edit Suggestion
                 //Show suggestions made first
-                System.out.printf("Suggestions made\n");
-                System.out.printf("---------------------------------------------------------\n");
-                i = 1;
-                for (Suggestion eachSuggestion:suggestionsMade){
-                    System.out.printf("%d. %s\n", i, eachSuggestion.getSuggestion());
-                    System.out.printf("Approved : %s\n", eachSuggestion.getApproved());
-                }
-                System.out.printf("---------------------------------------------------------\n");
-                int suggestionIndex = Helper.readInt("Select suggestion to edit : ");
-                System.out.printf("---------------------------------------------------------\n");
-                //edit the suggestion
-                if (suggestionIndex > 0 && suggestionIndex <= suggestionsMade.size()){
-                    Suggestion target = suggestionsMade.get(suggestionIndex-1);
-                    if (target.getApproved() == true){
-                        System.out.printf("Suggestion already approved, unable to edit\n");
-                    }
-                    else{
-                        target.setSuggestion(Helper.readString("Input new suggestion : "));
-                        System.out.printf("Successfully editted suggestion\n");
-                    }
-                }
-                else{System.out.println("Invalid choice");}
+                SuggestionManager.viewSuggestions(this);
+                SuggestionManager.editSuggestion(this);
                 break;//Edit suggestion END
 
                 case 16://Delete Suggestion
                 //Show suggestions made first
-                System.out.printf("Suggestions made\n");
-                System.out.printf("---------------------------------------------------------\n");
-                i = 1;
-                for (Suggestion eachSuggestion:suggestionsMade){
-                    System.out.printf("%d. %s\n", i, eachSuggestion.getSuggestion());
-                    System.out.printf("Approved : %s\n", eachSuggestion.getApproved());
-                }
-                System.out.printf("---------------------------------------------------------\n");
-                suggestionIndex = Helper.readInt("Select suggestion to edit : ");
-                System.out.printf("---------------------------------------------------------\n");
-                //delete the suggestion
-                if (suggestionIndex > 0 && suggestionIndex <= suggestionsMade.size()){
-                    Suggestion target = suggestionsMade.get(suggestionIndex-1);
-                    if (target.getApproved() == true){
-                        System.out.printf("Suggestion already approved, unable to delete\n");
-                    }
-                    else{
-                        this.committeeOf.removeSuggestion(target);
-                        this.suggestionsMade.remove(target);
-                        System.out.printf("Successfully deleted suggestion\n");
-                    }
-                }
-                else{System.out.println("Invalid choice");}
-                break;//Delete Suggestion END
+                SuggestionManager.viewSuggestions(this);
+                SuggestionManager.deleteSuggestion(this);
+                break;
+                
             }   
         }  
     }
