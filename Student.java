@@ -56,7 +56,7 @@ public class Student extends User {
         return this.point;
     }
     
-    public void incPoint(){
+    public void addPoint(){
         this.point += 1;
     }
 
