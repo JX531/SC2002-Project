@@ -22,13 +22,8 @@ public class Student extends User {
         this.registeredCamps.add(camp);
     }
 
-    public void removeRegisteredCamp(int index) {
-        if (index >= 0 && index < registeredCamps.size()) {
-            this.registeredCamps.remove(index);
-        }
-        else {
-            throw new IndexOutOfBoundsException("Index is out of bounds");
-        }
+    public void removeRegisteredCamp(Camp camp) {
+        this.registeredCamps.remove(camp);
     }
 
     public void viewCamps(ArrayList<Camp> camps, String prefix) {
@@ -62,15 +57,13 @@ public class Student extends User {
     }
 
     //deleting enquiry
-    public void removeEnquiriesMade(int index){
-        if (index >= 0 && index < enquiriesMade.size()) {
-            this.enquiriesMade.remove(index);
-        }
-        else {
-            throw new IndexOutOfBoundsException("Index is out of bounds");
-        }
+    public void removeEnquiriesMade(Enquiry enquiry){
+        this.enquiriesMade.remove(enquiry);
     }
-
+    public ArrayList<Enquiry> getEnquiriesMade(){
+        return this.enquiriesMade;
+    }
+    
     public void setCommitteeOf(Camp camp) {
         this.committeeOf = camp;
     }
@@ -87,27 +80,18 @@ public class Student extends User {
         this.point += 1;
     }
 
-    //making suggestion
     public void addSuggestionsMade(Suggestion suggestion){
         this.suggestionsMade.add(suggestion);
     }
 
-    //deleting suggestion
-    public void removeSuggestionsMade(int index){
-        if (index >= 0 && index < suggestionsMade.size()) {
-            this.suggestionsMade.remove(index);
-        }
-        else {
-            throw new IndexOutOfBoundsException("Index is out of bounds");
-        }
+    public void removeSuggestionsMade(Suggestion suggestion){
+        this.suggestionsMade.remove(suggestion);
     }
 
     public ArrayList<Suggestion> getSuggestionsMade(){
         return this.suggestionsMade;
     }
-    public ArrayList<Enquiry> getEnquiriesMade(){
-        return this.enquiriesMade;
-    }
+    
 
     //returns true if clash, false if no clash
     public Boolean checkClash(Camp camp){
