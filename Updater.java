@@ -6,20 +6,7 @@ import java.util.ArrayList;
 
 public class Updater {
     public static void updateAll(ArrayList<Camp> CampMasterList, ArrayList<Student> StudentMasterList, ArrayList<Staff> StaffMasterList){
-        //Classes
-        String Students = "path/to/your/output.csv";
-        String Staffs = "path/to/your/output.csv";
-        String Camps = "path/to/your/output.csv";
-        String Enquiries = "path/to/your/output.csv";
-        String Suggestions = "path/to/your/output.csv";
-
-        //Relations
-        String Camp_Student = "path/to/your/output.csv";
-        String Camp_Staff = "path/to/your/output.csv";
-
-        //
-        
-
+       
     }
 
     private static String escapeField(String field) {
