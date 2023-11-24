@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,13 +26,21 @@ public class FilterLister {
         Collections.sort(camplist, dateComparator);
     }
 
-    private static void campFilterMenu(ArrayList<Camp> camps){
+    private static Boolean filterCheck(Object input, Object filter){
+        if (input.equals(filter)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    private static void campSortMenu(ArrayList<Camp> camps){
         //print options
         System.out.printf("---------------------------------------------------------\n");
-        System.out.println("Would you like to apply a filter to the camp list?");
+        System.out.println("Would you like to sort the camp list?");
         System.out.println("1. Sort by Location");
         System.out.println("2. Sort by Start Date");
-        System.out.println("3. No");
+        System.out.println("3. Sort by Name");
         //take input
         int choice = Helper.readInt("> \n");
         //if input is in valid range
@@ -47,13 +56,32 @@ public class FilterLister {
                 sortCampsDate(camps);
                 System.out.println("Sorted by Start Date \n");
                 break;
-                default:
-                //default is sort by name alphabetically
+                case 3:
+                //sort by name alphabetically
                 sortCampsName(camps);
+                System.out.println("Sorted by Name \n");
                 break;
             }
         }
         else{System.out.println("Invalid Choice");}
+    }
+
+    private static int campFilterMenu(){
+        //print options
+        int choice = -1;
+        while (choice < 1 || choice > 4){
+            System.out.printf("---------------------------------------------------------\n");
+            System.out.println("Would you like to filter the camp list?");
+            System.out.println("1. Filter by Name");
+            System.out.println("2. Filter by Location");
+            System.out.println("3. Filter by Start Date");
+            System.out.println("4. No");
+            choice = Helper.readInt("> ");
+            if (choice < 1 || choice >4){
+                System.out.println("Invalid option");
+            }
+        }
+        return choice;
     }
 
     //print each camp and its index
@@ -88,43 +116,95 @@ public class FilterLister {
     // Lists input camp list, with option to include filters based on boolean filter
     public static void listCamp(ArrayList<Camp> camps, Boolean filter) {
         //if including filter, call filter menu
-        if (filter){campFilterMenu(camps);}
-        //else default sort by  names alphabetically
-        else{sortCampsName(camps);}
+        int filterType = -1;
+        String filterString = "'wadawdwadada'";
+        LocalDate filterdate = LocalDate.of(2022, 12, 2);
+        if (filter){
+            //filter type
+            filterType = campFilterMenu();
+            //if filter type is string, get filterstring
+            if (filterType == 1 || filterType == 2){
+                filterString = Helper.readString("Input Filter > ");
+            }
+            //if filter type is date, get filter date
+            if (filterType == 3){
+                filterdate = Helper.readDate("Input Filter >");
+            }
+        }
+        else{
+            //sort if not filtering
+            campSortMenu(camps);
+        }
         //for each camp in the camp list
         int i = 1;
         System.out.printf("---------------------------------------------------------\n");
         System.out.printf("%s Camps\n");
         for (Camp eachcamp:camps){
-            //print camp details with index
-            printCampDetails(i,eachcamp);
-            //increment index
-            i++;
+            //print camp details with index for each filter type
+            if (filterType == 1){
+                if(filterCheck(filterString, eachcamp.getName())){
+                    printCampDetails(i,eachcamp);
+                    //increment index
+                    i++;
+                }
+            }
+            if (filterType == 2){
+                if(filterCheck(filterString, eachcamp.getLocation())){
+                    printCampDetails(i,eachcamp);
+                    i++;
+                }
+            }
+            if (filterType == 3){
+                if(filterCheck(filterdate, eachcamp.getStarDate())){
+                    printCampDetails(i,eachcamp);
+                    i++;
+                }
+            }
+            if (filterType == 4){
+                printCampDetails(i,eachcamp);
+                i++;
+            }
+            
         }
     }
 
     //overload to allow prefix
     public static void listCamp(ArrayList<Camp> camps, Boolean filter,String prefix) {
         //if including filter, call filter menu
-        if (filter){campFilterMenu(camps);}
-        //else default sort by  names alphabetically
-        else{sortCampsName(camps);}
+        int filterType = -1;
+        String filterString = "'wadawdwadada'";
+        LocalDate filterdate = LocalDate.of(2022, 12, 2);
+        if (filter){
+            //filter type
+            filterType = campFilterMenu();
+            if (filterType == 1 || filterType == 2){
+                filterString = Helper.readString("Input Filter > ");
+            }
+            if (filterType == 3){
+                filterdate = Helper.readDate("Input Filter >");
+            }
+        }
+        else{
+            //sort if not filtering
+            campSortMenu(camps);
+        }
         //for each camp in the camp list
         int i = 1;
         System.out.printf("---------------------------------------------------------\n");
         System.out.printf("%s Camps\n",prefix);
         for (Camp eachcamp:camps){
             //print camp details with index
-            printCampDetails(i,eachcamp);
-            //increment index
-            i++;
+            if (filterType == 1){if(filterCheck(filterString, eachcamp.getName())){printCampDetails(i,eachcamp);i++;}}
+            if (filterType == 2){if(filterCheck(filterString, eachcamp.getLocation())){printCampDetails(i,eachcamp);i++;}}
+            if (filterType == 3){if(filterCheck(filterdate, eachcamp.getStarDate())){printCampDetails(i,eachcamp);i++;}}
+            if (filterType == 4){printCampDetails(i,eachcamp);i++;}
         }
     }
 
     //Sort input student list by name alphabetically
     private static void sortStudentName(ArrayList<Student> studentList){
         //create comparator
-        Comparator<Student> nameComparator = Comparator.comparing(Student::getID);
+        Comparator<Student> nameComparator = Comparator.comparing(Student::getName);
         //sort by comparator
         Collections.sort(studentList, nameComparator);
     }
@@ -139,7 +219,7 @@ public class FilterLister {
     //prints details of student and their index ( in a list of students )
     private static void printStudentDetails(int index, Student eachStudent){
         System.out.printf("%d.\n",index);
-        System.out.printf("Name                      : %s\n",eachStudent.getID());
+        System.out.printf("Name                      : %s\n",eachStudent.getName());
         System.out.printf("Faculty                   : %s\n",eachStudent.getFaculty());
         if (eachStudent.getCommitteeOf() != null){
             System.out.printf("Role                      : %s\n","Committee Member");
