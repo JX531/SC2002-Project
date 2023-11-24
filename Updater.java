@@ -5,9 +5,14 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
 public class Updater {
-    public static void updateAll(ArrayList<Camp> CampMasterList, ArrayList<Student> StudentMasterList, ArrayList<Staff> StaffMasterList){
-       
-    }
+    //Update Paths here
+    private static String Camp_Student_Path = "C:\\\\Users\\\\Admin\\\\OneDrive\\\\Desktop\\\\Relations\\\\Camp_Student.csv";
+    private static String Camp_Staff_Path = "C:\\\\Users\\\\Admin\\\\OneDrive\\\\Desktop\\\\Relations\\\\Camp_Staff.csv";
+    private static String StudentList_Path = "C:\\\\Users\\\\Admin\\\\OneDrive\\\\Desktop\\\\Relations\\\\StudentList.csv";
+    private static String StaffList_Path = "C:\\\\Users\\\\Admin\\\\OneDrive\\\\Desktop\\\\Relations\\\\StaffList.csv";
+    private static String CampList_Path = "C:\\\\Users\\\\Admin\\\\OneDrive\\\\Desktop\\\\Relations\\\\CampList.csv";
+    private static String EnquiryList_Path = "C:\\\\Users\\\\Admin\\\\OneDrive\\\\Desktop\\\\Relations\\\\EnquiryList.csv";
+    private static String SuggestionList_Path = "C:\\\\Users\\\\Admin\\\\OneDrive\\\\Desktop\\\\Relations\\\\SuggestionList.csv";
 
     private static String escapeField(String field) {
         // If the field is null, return an empty string
@@ -25,7 +30,7 @@ public class Updater {
 
     public static void updateCamp_Student(ArrayList<Student> StudentMasterList){
         try{
-            Path path  = Path.of("C:\\\\Users\\\\Admin\\\\OneDrive\\\\Desktop\\\\Relations\\\\Camp_Student.csv");
+            Path path  = Path.of(Camp_Student_Path);
             String header = "Relation, Camp Name, StudentID, Points\n";
             Files.writeString(path, header, StandardOpenOption.TRUNCATE_EXISTING);
             //for each student in StudentMasterList
@@ -54,7 +59,7 @@ public class Updater {
 
     public static void updateCamp_Staff(ArrayList<Staff> StaffMasterList){
         try{
-            Path path  = Path.of("C:\\\\Users\\\\Admin\\\\OneDrive\\\\Desktop\\\\Relations\\\\Camp_Staff.csv");
+            Path path  = Path.of(Camp_Staff_Path);
             String header = "Camp Name, Staff ID\n";
             Files.writeString(path, header, StandardOpenOption.TRUNCATE_EXISTING);
             //for each staff
@@ -73,7 +78,7 @@ public class Updater {
 
     public static void updateStudents(ArrayList<Student> StudentMasterList){
         try{
-            Path path  = Path.of("C:\\Users\\Admin\\OneDrive\\Desktop\\Relations\\StudentList.csv");
+            Path path  = Path.of(StudentList_Path);
             String header = "Name, Email, Faculty, Password\n";
             Files.writeString(path, header, StandardOpenOption.TRUNCATE_EXISTING);
             //for each student
@@ -89,7 +94,7 @@ public class Updater {
 
     public static void updateStaff(ArrayList<Staff> StaffMasterList){
         try{
-            Path path  = Path.of("C:\\\\Users\\\\Admin\\\\OneDrive\\\\Desktop\\\\Relations\\\\StaffList.csv");
+            Path path  = Path.of(StaffList_Path);
             String header = "Name, Email, Faculty, Password\n";
             Files.writeString(path, header, StandardOpenOption.TRUNCATE_EXISTING);
             //for each student
@@ -105,7 +110,7 @@ public class Updater {
 
     public static void updateCamps(ArrayList<Camp> CampMasterList){
         try{
-            Path path  = Path.of("C:\\\\Users\\\\Admin\\\\OneDrive\\\\Desktop\\\\Relations\\\\CampList.csv");
+            Path path  = Path.of(CampList_Path);
             String header = "Name, User Group, Location, Description, Start Date, End Date, Register Date, Slot, Remaining Committee, Staff in Charge, OwnSchool, Visibility \n";
             Files.writeString(path, header, StandardOpenOption.TRUNCATE_EXISTING);
             for (Camp eachCamp:CampMasterList){
@@ -120,7 +125,7 @@ public class Updater {
 
     public static void updateEnquiries(ArrayList<Camp> CampMasterList){
         try{
-            Path path  = Path.of("C:\\\\Users\\\\Admin\\\\OneDrive\\\\Desktop\\\\Relations\\\\EnquiryList.csv");
+            Path path  = Path.of(EnquiryList_Path);
             String header = "SentTo, MadeBy, Question, Answer\n";
             Files.writeString(path, header, StandardOpenOption.TRUNCATE_EXISTING);
             for (Camp eachCamp:CampMasterList){
@@ -137,7 +142,7 @@ public class Updater {
 
     public static void updateSuggestions(ArrayList<Camp> CampMasterList){
         try{
-            Path path  = Path.of("C:\\\\Users\\\\Admin\\\\OneDrive\\\\Desktop\\\\Relations\\\\SuggestionList.csv");
+            Path path  = Path.of(SuggestionList_Path);
             String header = "SentTo, CreatedBy, Suggestion, Approval, Processed\n";
             Files.writeString(path, header, StandardOpenOption.TRUNCATE_EXISTING);
             for (Camp eachCamp:CampMasterList){
