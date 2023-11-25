@@ -44,7 +44,7 @@ public class EnquiryManager {
             //print question
             System.out.printf("Question : %s\n", eachEnquiry.getQuestion());
             //print answer 
-            System.out.printf("Answer   : %s\n", eachEnquiry.getAnswer());
+            System.out.println("Answer: " + (eachEnquiry.getAnswer() != null ? eachEnquiry.getAnswer() : "No response yet."));;
             //increment index
             i++;
         }
@@ -111,7 +111,7 @@ public class EnquiryManager {
             //print index and question
             System.out.printf("%d. %s\n",i, eachEnquiry.getQuestion());
             //print answer
-            System.out.printf("Answer   : %s\n", eachEnquiry.getAnswer());
+            System.out.println("Answer: " + (eachEnquiry.getAnswer() != null ? eachEnquiry.getAnswer() : "No response yet."));;
             //increment index
             i++;
         }
