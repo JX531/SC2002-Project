@@ -369,7 +369,10 @@ public class CampManager {
 
         // Get the selected camp
         Camp selectedCamp = user.getCampsOwned().get(campIndex);
-
+        if (selectedCamp.getCommitteeList().size() != 0 || selectedCamp.getStudentList().size()!= 0){
+            System.out.println("Students already registered for camp, unable to edit");
+            return;
+        }
         // Present options for what to edit
         System.out.println("What would you like to edit?");
         System.out.println("1. Name");
@@ -422,7 +425,92 @@ public class CampManager {
 
         System.out.println("Camp has been updated successfully.");
     }
+    public static void withdrawnFromCamp(Student user){
+        System.out.printf("---------------------------------------------------------\n");
+                int campindex = Helper.readInt("Select camp to withdrawn from : ");
+                
+                if (campindex > 0 && campindex <= user.getRegisteredCamps().size()){
+                    Camp target = user.getRegisteredCamps().get(campindex-1);
+                    if (user.getCommitteeOf() == target){
+                        System.out.printf("---------------------------------------------------------\n");
+                        System.out.printf("You cannot withdrawn from a camp you are a committee member of\n");
+                    }
+                    else{
+                        target.removeStudent(user); // Remove student from camp first
+                        user.addWithdrawnCamp(target); // add camp to withdrawn list
+                        user.removeRegisteredCamp(target); // remove camp from registered list
+                        System.out.printf("Successfully withdrawn from camp : %s\n",target.getName());
+                    }
+                }
+                else{System.out.println("Invalid choice");}
+    }
+     //returns true if clash, false if no clash
+     private static Boolean checkClash(Student user, Camp camp){
+        for (Camp eachcamp : user.getRegisteredCamps()){
+            //target camp ends before registered camp starts or target camp starts after registered camp ends
+            if (camp.getEndDate().isBefore(eachcamp.getStarDate()) || camp.getStarDate().isAfter(eachcamp.getEndDate())){
+                // no clash, check next camp
+                continue;
+            }
+            else{
+                // clash, return true
+                return true;
+            }
+        }
 
+        //checked all camps and no clash, return false
+        return false;
+    }
+    public static void registerForCamp(Student user, ArrayList<Camp> available){
+        System.out.printf("---------------------------------------------------------\n");
+                //Select camp to register for
+                int campindex = Helper.readInt("Select Camp to register for : ");               
+                if (campindex > 0 && campindex <= available.size()){
+                    //Register as attendee or committee
+                    Camp target = available.get(campindex-1);
+                    if (LocalDate.now().isAfter(target.getRegisterDate())){System.out.println("The registration date for this camp has passed");}
+                    else{
+                        if(user.getWithdrawnCamps().contains(target) || user.getRegisteredCamps().contains(target)){System.out.println("You have already registered or withdrawn from this camp");}
+                        else{
+                            if(checkClash(user,target)){System.out.println("The camp clashes with your registered camps");}
+                            else{
+                                System.out.printf("---------------------------------------------------------\n");
+                                System.out.printf("1. Attendee\n");
+                                System.out.printf("2. Committee\n");
+                                System.out.printf("---------------------------------------------------------\n");
+                                int answer = Helper.readInt("Register as : ");
+                                if (answer >= 1 && answer <= 2){
+                                    switch(answer){
+                                    case 1://as attendeee
+                                    if (target.getSlots() == 0){System.out.println("Attendee slots for this camp are full");}
+                                    else{
+                                        user.addRegisteredCamp(target);
+                                        target.addStudent(user);
+                                        System.out.printf("Successfully registered as attendee for : %s\n",target.getName());
+                                    }
+                                    break;
+                                    case 2://as committee
+                                    if (user.getCommitteeOf() != null){System.out.println("You are already in the committee of a camp");}
+                                    else{
+                                        if (target.getRemainingCommittee() == 0){System.out.println("Committee slots for this camp are full");}
+                                        else{
+                                            user.setCommitteeOf(target);
+                                            target.addCommittee(user);
+                                            System.out.printf("Successfully registered as committee member for : %s\n",target.getName());
+                                        }
+                                    }
+                                    break;
+                                    }   
+                                }
+                                else{System.out.println("Invalid choice");}
+                            }
+                        }
+                    }
+                    
+                    
+                } 
+                else{System.out.println("Invalid choice");}
+    }
     public static void deleteCamp(Staff user, ArrayList<Camp> CampMasterList) {
     	Scanner scanner = new Scanner(System.in);
 
@@ -440,13 +528,17 @@ public class CampManager {
         // Get the index of the camp to delete
         System.out.print("Enter the number of the camp you wish to delete: ");
         int campIndex = scanner.nextInt();
-
+        
         // Validate the index
         if (campIndex < 1 || campIndex > user.getCampsOwned().size()) {
             System.out.println("Invalid camp number. Please try again.");
             return;
         }
-
+        Camp campToDelete = user.getCampsOwned().remove(campIndex - 1);
+        if (campToDelete.getCommitteeList().size() != 0 || campToDelete.getStudentList().size()!= 0){
+            System.out.println("Students already registered for camp, unable to delete");
+            return;
+        }
         // Confirm deletion
         scanner.nextLine(); // Consume the newline left-over
         System.out.println("Are you sure you want to delete this camp? (yes/no)");
@@ -458,7 +550,7 @@ public class CampManager {
         }
 
         // Delete the camp
-        Camp campToDelete = user.getCampsOwned().remove(campIndex - 1);
+        
         CampMasterList.remove(campToDelete);
         System.out.println("Camp deleted successfully: " + campToDelete.getName());
     }
@@ -488,6 +580,10 @@ public class CampManager {
 
         // Toggle the visibility
         Camp selectedCamp = user.getCampsOwned().get(campIndex - 1);
+        if (selectedCamp.getCommitteeList().size() != 0 || selectedCamp.getStudentList().size()!= 0){
+            System.out.println("Students already registered for camp, unable to toggle visibilty");
+            return;
+        }
         selectedCamp.setVisibility(!selectedCamp.getVisibility());
         System.out.println("Camp visibility toggled. The camp is now " + (selectedCamp.getVisibility() ? "visible" : "hidden") + ".");
     }
