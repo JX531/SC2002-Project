@@ -181,16 +181,15 @@ public class Student extends User {
                 break;
                 
                 case 2: //View Camps Available to you  
-                FilterLister.listCamp(available, true, "Available");
+                CampManager.listCamp(available, true, "Available");
                 break; // View available camps END
 
                 case 3: //Register for a camp
                 //Show available camps first
-                FilterLister.listCamp(available, false, "Available");
+                CampManager.listCamp(available, false, "Available");
                 System.out.printf("---------------------------------------------------------\n");
                 //Select camp to register for
-                int campindex = Helper.readInt("Select Camp to register for : ");
-                
+                int campindex = Helper.readInt("Select Camp to register for : ");               
                 if (campindex > 0 && campindex <= available.size()){
                     //Register as attendee or committee
                     Camp target = available.get(campindex-1);
@@ -239,12 +238,12 @@ public class Student extends User {
                 break;//Register for camp END
 
                 case 4://View registered camps
-                FilterLister.listCamp(registeredCamps,false,"Registered");
+                CampManager.listCamp(registeredCamps,false,"Registered");
                 break; //View registered camps END
 
                 case 5: // Withdraw from a camp
                 //Display registered Camps first
-                FilterLister.listCamp(registeredCamps,false,"Registered");
+                CampManager.listCamp(registeredCamps,false,"Registered");
                 System.out.printf("---------------------------------------------------------\n");
                 campindex = Helper.readInt("Select camp to withdrawn from : ");
                 
@@ -265,12 +264,12 @@ public class Student extends User {
                 break; // withdraw from a camp END
 
                 case 6://View withdrawn camps
-                FilterLister.listCamp(registeredCamps,false,"Withdrawn");
+                CampManager.listCamp(registeredCamps,false,"Withdrawn");
                 break;//View withdrwan camps END
 
                 case 7://Submit Enquiry
                 //Show camps to submit enquiries to
-                FilterLister.listCamp(CampMasterList,false,"All");
+                CampManager.listCamp(CampMasterList,false,"All");
                 EnquiryManager.submitEnquiry(this, CampMasterList);
                 break; //submit enquiry END
 
@@ -293,21 +292,21 @@ public class Student extends User {
 
                 case 11: // View Committe Details
                 if(this.committeeOf !=null){
-                    FilterLister.printCampDetails(committeeOf);
+                    CampManager.printCampDetails(committeeOf);
                 }
                 break; // View Committee Details END
 
                 case 12: // View Enquiry made to your camp
                 if(this.committeeOf !=null){
-                    EnquiryManager.viewCampEnquiries(this);
+                    EnquiryManager.viewCampEnquiries(this.committeeOf);
                 }
                 break; //View Enquiry of camp END
 
                 case 13: // Answer Enquiry
                 //First show enquiries made to your camp
                 if(this.committeeOf !=null){
-                    EnquiryManager.viewCampEnquiries(this);
-                    EnquiryManager.answerEnquiry(this);
+                    EnquiryManager.viewCampEnquiries(this.committeeOf);
+                    EnquiryManager.answerEnquiry(this.committeeOf);
                 }
                 break; // Answer Enquiry End
 
@@ -340,7 +339,7 @@ public class Student extends User {
                 break;
 
                 case 18:
-                FilterLister.generateCampReport(this.committeeOf);
+                CampManager.generateCampReport(this.committeeOf);
                 break;
                 
             }   
