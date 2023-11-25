@@ -40,7 +40,7 @@ public class Camp {
     this.startDate = startDate;
     this.endDate = endDate;
     this.registerDate = registerDate;
-    this.slot = slot-10; //Assume that total slots on creation includes 10 slots for committee
+    this.slot = slot-10;
     this.remainingCommittee = 10;
     this.studentList = new ArrayList<Student>();
     this.committee = new ArrayList<Student>();
@@ -48,7 +48,42 @@ public class Camp {
     this.enquiries = new ArrayList<Enquiry>();
     this.suggestions = new ArrayList<Suggestion>(); 
     this.ownSchool = ownSchool;
-    this.visibility = false;
+    this.visibility = true;
+    }
+    //Overloaded
+    public Camp(String name 
+    , String userGroup
+    , String location
+    , String description
+    , LocalDate startDate
+    , LocalDate endDate
+    , LocalDate registerDate
+    , int slot
+    , int remainingCommittee
+    , ArrayList<Student> studentList
+    , ArrayList<Student> committee
+    , ArrayList<Enquiry> enquiries
+    , ArrayList<Suggestion> suggestions
+    , Staff staffInCharge
+    , Boolean ownSchool
+    , Boolean visibility)
+    {
+    this.name = name;
+    this.userGroup = userGroup;
+    this.location = location;
+    this.description = description;
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.registerDate = registerDate;
+    this.slot = slot;
+    this.remainingCommittee = remainingCommittee;
+    this.studentList = studentList;
+    this.committee = committee;
+    this.staffInCharge = staffInCharge;
+    this.enquiries = enquiries;
+    this.suggestions = suggestions; 
+    this.ownSchool = ownSchool;
+    this.visibility = visibility;
     }
 
     public String getName(){
@@ -62,7 +97,9 @@ public class Camp {
         return this.userGroup;
     }
     //no change usergroups
-
+    public Staff getStaffinCharge(){
+        return this.staffInCharge;
+    }
     public String getDescription(){
         return this.description;
     }
@@ -105,6 +142,9 @@ public class Camp {
     public ArrayList<Enquiry> getEnquiries(){
         return this.enquiries;
     }
+    public ArrayList<Suggestion> getSuggestions(){
+        return this.suggestions;
+    }
     public void addStudent(Student student){
         this.studentList.add(student);
         this.slot--;
@@ -137,6 +177,7 @@ public class Camp {
     public void removeSuggestion(Suggestion suggestion){
         this.suggestions.remove(suggestion);
     }
+
     public Boolean getVisibility(){
         return this.visibility;
     }
