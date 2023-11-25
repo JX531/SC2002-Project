@@ -1,49 +1,26 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Scanner;
 
 public class Staff extends User {
 
-    private List<Camp> campsOwned;
+    private ArrayList<Camp> campsOwned;
+    private Scanner scanner = new Scanner(System.in);
 
-    public Staff(String userId, String faculty) {
-        super(userId, faculty);
+    // Constructor
+    public Staff(String userID, String faculty) {
+        super(userID, faculty);
         this.campsOwned = new ArrayList<>();
-    }
-
-    public void addOwnedCamp(Camp camp) {
-        campsOwned.add(camp);
-    }
-
-    public boolean removeOwnedCamp(Camp camp) {
-        return campsOwned.remove(camp);
-    }
-
-    public List<Camp> viewOwnedCamps() {
-        return new ArrayList<>(campsOwned);
-    }
-
-    public void replyToInquiry(Inquiry inquiry, String reply) {
-        if (campsOwned.contains(inquiry.getCamp()) && !inquiry.isProcessed()) {
-            inquiry.setReply(reply);
-            inquiry.setProcessed(true);
-        }
-    }
-
-    public void reviewSuggestion(Suggestion suggestion, boolean approve) {
-        if (campsOwned.contains(suggestion.getCamp())) {
-            suggestion.setApproved(approve);
-        }
-    }
-
-    public void generateReport() {
     }
 
     // Menu method for Staff
     public void menu(ArrayList<Camp> CampMasterList) {
         int choice;
         do {
-            System.out.println("Staff Menu:");
-            System.out.println("1. Print Info");
+        	System.out.println("---------------------------------------------");
+        	System.out.println("0.  Logout");
+            System.out.println("1. Change Password");
             System.out.println("2. Create Camp");
             System.out.println("3. Edit Camp");
             System.out.println("4. Delete Camp");
@@ -54,14 +31,20 @@ public class Staff extends User {
             System.out.println("9. View Suggestions of Own Camp");
             System.out.println("10. Generate Report of Camps");
             System.out.println("11. Generate Performance Report");
-            System.out.println("12. Exit");
-            System.out.print("Enter your choice: ");
+            System.out.println("---------------------------------------------");
+            System.out.printf("Input an option >>");
             choice = scanner.nextInt();
 
             switch (choice) {
-                case 1:
-                    printInfo();
+                case 0:
                     break;
+                case 1://change password
+                String new_password = Helper.readString("Input new password : ");
+                this.setPassword(new_password);
+                System.out.printf("Password successfully changed\n");
+                System.out.printf("You will now be logged out\n");
+                choice = 0;
+                break;
                 case 2:
                     createCamp(CampMasterList);
                     break;
@@ -92,9 +75,6 @@ public class Staff extends User {
                 case 11:
                     generatePerformanceReport();
                     break;
-                case 12:
-                    System.out.println("Exiting staff menu...");
-                    break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
@@ -108,41 +88,25 @@ public class Staff extends User {
     }
 
     private void createCamp(ArrayList<Camp> CampMasterList) {
-    	Scanner scanner = new Scanner(System.in);
+        // Gather camp details from the staff member using Helper methods
+        String name = Helper.readString("Enter camp name: ");
+        String userGroup = Helper.readString("Enter user group: ");
+        String location = Helper.readString("Enter camp location: ");
+        String description = Helper.readString("Enter camp description: ");
+        LocalDate startDate = Helper.readDate("Enter start date (dd-mm-yyyy): ");
+        LocalDate endDate = Helper.readDate("Enter end date (dd-mm-yyyy): ");
+        LocalDate registerDate = Helper.readDate("Enter registration end date (dd-mm-yyyy): ");
+        int slots = Helper.readInt("Enter the number of slots available: ");
 
-        // Gather camp details from the staff member
-        System.out.print("Enter camp name: ");
-        String name = scanner.nextLine();
-
-        System.out.print("Enter user group: ");
-        String userGroup = scanner.nextLine();
-
-        System.out.print("Enter camp location: ");
-        String location = scanner.nextLine();
-
-        System.out.print("Enter camp description: ");
-        String description = scanner.nextLine();
-
-        System.out.print("Enter start date (YYYY-MM-DD): ");
-        LocalDate startDate = LocalDate.parse(scanner.nextLine(), DateTimeFormatter.ISO_LOCAL_DATE);
-
-        System.out.print("Enter end date (YYYY-MM-DD): ");
-        LocalDate endDate = LocalDate.parse(scanner.nextLine(), DateTimeFormatter.ISO_LOCAL_DATE);
-
-        System.out.print("Enter registration end date (YYYY-MM-DD): ");
-        LocalDate registerDate = LocalDate.parse(scanner.nextLine(), DateTimeFormatter.ISO_LOCAL_DATE);
-
-        System.out.print("Enter the number of slots available: ");
-        int slots = scanner.nextInt();
-        scanner.nextLine(); // Consume the remaining newline
+        // Assuming the staffInCharge is the current Staff object ('this')
+        Staff staffInCharge = this;
 
         // Own school status
-        System.out.print("Is this camp only for your own school? (yes/no): ");
-        String ownSchoolInput = scanner.nextLine();
+        String ownSchoolInput = Helper.readString("Is this camp only for your own school? (yes/no): ");
         Boolean ownSchool = ownSchoolInput.equalsIgnoreCase("yes");
 
         // Create the camp object
-        Camp newCamp = new Camp(name, userGroup, location, description, startDate, endDate, registerDate, slots, this, ownSchool);
+        Camp newCamp = new Camp(name, userGroup, location, description, startDate, endDate, registerDate, slots, staffInCharge, ownSchool);
 
         // Add the new camp to the master list and the staff's list of owned camps
         CampMasterList.add(newCamp);
@@ -151,8 +115,12 @@ public class Staff extends User {
         System.out.println("New camp created successfully!");
     }
 
+
     private void editCamp(ArrayList<Camp> CampMasterList) {
-        Scanner scanner = new Scanner(System.in);
+        if (campsOwned.isEmpty()) {
+            System.out.println("You do not own any camps to edit.");
+            return;
+        }
 
         // Display the list of camps owned by the staff member
         System.out.println("Select a camp to edit:");
@@ -161,18 +129,16 @@ public class Staff extends User {
         }
 
         // Get the index of the camp to edit
-        System.out.print("Enter the number of the camp you wish to edit: ");
-        int campIndex = scanner.nextInt();
-        scanner.nextLine(); // Consume the newline left-over
+        int campIndex = Helper.readInt("Enter the number of the camp you wish to edit: ") - 1;
 
         // Check if the index is valid
-        if (campIndex < 1 || campIndex > campsOwned.size()) {
+        if (campIndex < 0 || campIndex >= campsOwned.size()) {
             System.out.println("Invalid camp number. Please try again.");
             return;
         }
 
         // Get the selected camp
-        Camp selectedCamp = campsOwned.get(campIndex - 1);
+        Camp selectedCamp = campsOwned.get(campIndex);
 
         // Present options for what to edit
         System.out.println("What would you like to edit?");
@@ -186,47 +152,38 @@ public class Staff extends User {
         System.out.println("8. Own School Status");
         System.out.println("9. Visibility");
         System.out.print("Enter your choice: ");
-        int editChoice = scanner.nextInt();
-        scanner.nextLine(); // Consume the newline left-over
+        int editChoice = Helper.readInt("");
 
         // Process the editing based on user choice
         switch (editChoice) {
             case 1:
-                System.out.print("Enter the new name: ");
-                selectedCamp.setname(scanner.nextLine());
+                selectedCamp.setname(Helper.readString("Enter the new name: "));
                 break;
             case 2:
-                System.out.print("Enter the new description: ");
-                selectedCamp.setDescription(scanner.nextLine());
+                selectedCamp.setDescription(Helper.readString("Enter the new description: "));
                 break;
             case 3:
-                System.out.print("Enter the new location: ");
-                selectedCamp.setLocation(scanner.nextLine());
+                selectedCamp.setLocation(Helper.readString("Enter the new location: "));
                 break;
             case 4:
-                System.out.print("Enter the new start date (YYYY-MM-DD): ");
-                selectedCamp.setStartDate(LocalDate.parse(scanner.nextLine(), DateTimeFormatter.ISO_LOCAL_DATE));
+                selectedCamp.setStartDate(Helper.readDate("Enter the new start date (dd-mm-yyyy): "));
                 break;
             case 5:
-                System.out.print("Enter the new end date (YYYY-MM-DD): ");
-                selectedCamp.setEndDate(LocalDate.parse(scanner.nextLine(), DateTimeFormatter.ISO_LOCAL_DATE));
+                selectedCamp.setEndDate(Helper.readDate("Enter the new end date (dd-mm-yyyy): "));
                 break;
             case 6:
-                System.out.print("Enter the new registration end date (YYYY-MM-DD): ");
-                selectedCamp.setRegisterDate(LocalDate.parse(scanner.nextLine(), DateTimeFormatter.ISO_LOCAL_DATE));
+                selectedCamp.setRegisterDate(Helper.readDate("Enter the new registration end date (dd-mm-yyyy): "));
                 break;
             case 7:
-                System.out.print("Enter the new number of slots: ");
-                selectedCamp.setSlots(scanner.nextInt());
-                scanner.nextLine(); // Consume the newline left-over
+                selectedCamp.setSlots(Helper.readInt("Enter the new number of slots: "));
                 break;
             case 8:
-                System.out.print("Is this camp only for your own school? (yes/no): ");
-                selectedCamp.setOwnSchool(scanner.nextLine().equalsIgnoreCase("yes"));
+                String ownSchoolResponse = Helper.readString("Is this camp only for your own school? (yes/no): ");
+                selectedCamp.setOwnSchool(ownSchoolResponse.equalsIgnoreCase("yes"));
                 break;
             case 9:
-                System.out.print("Should the camp be visible? (yes/no): ");
-                selectedCamp.setVisibility(scanner.nextLine().equalsIgnoreCase("yes"));
+                String visibilityResponse = Helper.readString("Should the camp be visible? (yes/no): ");
+                selectedCamp.setVisibility(visibilityResponse.equalsIgnoreCase("yes"));
                 break;
             default:
                 System.out.println("Invalid choice. Please try again.");
@@ -308,26 +265,192 @@ public class Staff extends User {
     }
 
     private void viewAllCamps(ArrayList<Camp> CampMasterList) {
-        // Display all camps in CampMasterList
+    	if (CampMasterList.isEmpty()) {
+            System.out.println("There are no camps currently available.");
+            return;
+        }
+
+        System.out.println("List of All Camps:");
+        for (Camp camp : CampMasterList) {
+            System.out.println("=========================================");
+            System.out.println("Camp Name: " + camp.getName());
+            System.out.println("User Group: " + camp.getUserGroup());
+            System.out.println("Location: " + camp.getLocation());
+            System.out.println("Description: " + camp.getDescription());
+            System.out.println("Start Date: " + camp.getStarDate());
+            System.out.println("End Date: " + camp.getEndDate());
+            System.out.println("Registration End Date: " + camp.getRegisterDate());
+            System.out.println("Slots Available: " + camp.getSlots());
+            System.out.println("Committee Slots Remaining: " + camp.getRemainingCommittee());
+            System.out.println("Is for Own School: " + (camp.getOwnSchool() ? "Yes" : "No"));
+            System.out.println("Visibility: " + (camp.getVisibility() ? "Visible" : "Hidden"));
+            System.out.println("=========================================");
+        }
     }
 
     private void viewOwnCamps() {
-        // Display camps from campsOwned
+        if (this.campsOwned.isEmpty()) {
+            System.out.println("You do not currently own any camps.");
+            return;
+        }
+
+        // Using the FilterLister class to list the camps
+        // The second parameter 'true' is to enable filtering and sorting
+        FilterLister.listCamp(this.campsOwned, true, "Owned");
     }
 
     private void viewEnquiriesOfOwnCamp() {
-        // Display enquiries for a selected camp from campsOwned
+        if (campsOwned.isEmpty()) {
+            System.out.println("You do not own any camps to view enquiries.");
+            return;
+        }
+
+        // Display the list of camps owned by the staff member
+        System.out.println("Select a camp to view its enquiries:");
+        for (int i = 0; i < campsOwned.size(); i++) {
+            System.out.printf("%d. %s\n", i + 1, campsOwned.get(i).getName());
+        }
+
+        // Get the index of the camp to view enquiries
+        int campIndex = Helper.readInt("Enter the number of the camp: ") - 1;
+
+        // Check if the index is valid
+        if (campIndex < 0 || campIndex >= campsOwned.size()) {
+            System.out.println("Invalid camp number. Please try again.");
+            return;
+        }
+
+        // Get the selected camp
+        Camp selectedCamp = campsOwned.get(campIndex);
+
+        // Check if there are enquiries for the selected camp
+        if (selectedCamp.getEnquiries().isEmpty()) {
+            System.out.println("There are no enquiries for this camp.");
+            return;
+        }
+
+        // Display enquiries for the selected camp
+        System.out.println("Enquiries for " + selectedCamp.getName() + ":");
+        for (Enquiry enquiry : selectedCamp.getEnquiries()) {
+            System.out.println("---------------------------------------------------------");
+            System.out.println("Enquiry: " + enquiry.getQuestion());
+            System.out.println("Response: " + (enquiry.getAnswer() != null ? enquiry.getAnswer() : "No response yet."));
+        }
     }
 
     private void viewSuggestionsOfOwnCamp() {
-        // Display suggestions for a selected camp from campsOwned
+    	    if (campsOwned.isEmpty()) {
+    	        System.out.println("You do not own any camps to view suggestions.");
+    	        return;
+    	    }
+
+    	    // Display the list of camps owned by the staff member
+    	    System.out.println("Select a camp to view its suggestions:");
+    	    for (int i = 0; i < campsOwned.size(); i++) {
+    	        System.out.printf("%d. %s\n", i + 1, campsOwned.get(i).getName());
+    	    }
+
+    	    // Get the index of the camp to view suggestions
+    	    int campIndex = Helper.readInt("Enter the number of the camp: ") - 1;
+
+    	    // Check if the index is valid
+    	    if (campIndex < 0 || campIndex >= campsOwned.size()) {
+    	        System.out.println("Invalid camp number. Please try again.");
+    	        return;
+    	    }
+
+    	    // Get the selected camp
+    	    Camp selectedCamp = campsOwned.get(campIndex);
+
+    	    // Check if there are suggestions for the selected camp
+    	    if (selectedCamp.getSuggestions().isEmpty()) {
+    	        System.out.println("There are no suggestions for this camp.");
+    	        return;
+    	    }
+
+    	    // Display suggestions for the selected camp
+    	    System.out.println("Suggestions for " + selectedCamp.getName() + ":");
+    	    for (Suggestion suggestion : selectedCamp.getSuggestions()) {
+    	        System.out.println("---------------------------------------------------------");
+    	        System.out.println("Suggestion: " + suggestion.getSuggestion());
+    	        System.out.println("Created by: " + suggestion.getCreatedby().getName());
+    	        System.out.println("Status: " + (suggestion.getProcessed() ? "Processed" : "Unprocessed") + ", " +
+    	                           (suggestion.getApproved() ? "Approved" : "Not Approved"));
+    	    }
     }
+  
 
     private void generateReportOfCamps() {
-        // Generate a report of all the camps, perhaps detailing their attendees and statuses
-    }
+    	   if (campsOwned.isEmpty()) {
+    	        System.out.println("You do not own any camps to generate reports for.");
+    	        return;
+    	    }
+
+    	    System.out.println("Generating reports for owned camps:");
+
+    	    for (Camp camp : campsOwned) {
+    	        System.out.println("---------------------------------------------------------");
+    	        System.out.println("Camp Report: " + camp.getName());
+    	        System.out.println("Location: " + camp.getLocation());
+    	        System.out.println("Dates: " + camp.getStarDate() + " to " + camp.getEndDate());
+    	        System.out.println("Registration End Date: " + camp.getRegisterDate());
+    	        System.out.println("Number of Slots: " + camp.getSlots());
+    	        System.out.println("Committee Slots Remaining: " + camp.getRemainingCommittee());
+
+    	        // Attendees
+    	        System.out.println("Attendees:");
+    	        for (Student attendee : camp.getStudentList()) {
+    	            System.out.println(" - " + attendee.getName());
+    	        }
+
+    	        // Committee members
+    	        System.out.println("Committee Members:");
+    	        for (Student member : camp.getCommitteeList()) {
+    	            System.out.println(" - " + member.getName());
+    	        }
+
+    	        // Enquiries
+    	        System.out.println("Enquiries:");
+    	        for (Enquiry enquiry : camp.getEnquiries()) {
+    	            System.out.println(" - Question: " + enquiry.getQuestion());
+    	            System.out.println("   Answer: " + (enquiry.getAnswer() != null ? enquiry.getAnswer() : "No response yet."));
+    	        }
+
+    	        // Suggestions
+    	        System.out.println("Suggestions:");
+    	        for (Suggestion suggestion : camp.getSuggestions()) {
+    	            System.out.println(" - Suggestion: " + suggestion.getSuggestion());
+    	            System.out.println("   Status: " + (suggestion.getProcessed() ? "Processed" : "Unprocessed") +
+    	                               ", " + (suggestion.getApproved() ? "Approved" : "Not Approved"));
+    	        }
+    	    }
+    	}
 
     private void generatePerformanceReport() {
-        // Generate a performance report for camps, could detail the participation or feedback
-    }
+    	   if (campsOwned.isEmpty()) {
+    	        System.out.println("You do not own any camps to generate performance reports for.");
+    	        return;
+    	    }
 
+    	    System.out.println("Generating performance reports for committee members in owned camps:");
+
+    	    for (Camp camp : campsOwned) {
+    	        System.out.println("---------------------------------------------------------");
+    	        System.out.println("Camp: " + camp.getName());
+    	        System.out.println("Committee Performance:");
+
+    	        // Check if there are committee members in the camp
+    	        if (camp.getCommitteeList().isEmpty()) {
+    	            System.out.println("No committee members in this camp.");
+    	            continue;
+    	        }
+
+    	        for (Student committeeMember : camp.getCommitteeList()) {
+    	            // Display the committee member's name and their points
+    	            System.out.println(" - Member: " + committeeMember.getName() + ", Points: " + committeeMember.getPoint());
+    	        }
+    	    }
+    	}
+
+
+}
