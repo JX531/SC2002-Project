@@ -22,7 +22,7 @@ public class Helper {
     }
 
     // Reads an integer value from the user
-    public static int readInt (String prompt) {
+    public static int readInt(String prompt) {
         int input = 0;
         boolean valid = false;
         while (!valid) {
