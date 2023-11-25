@@ -92,23 +92,7 @@ public class Student extends User {
     }
     
 
-    //returns true if clash, false if no clash
-    private Boolean checkClash(Camp camp){
-        for (Camp eachcamp : registeredCamps){
-            //target camp ends before registered camp starts or target camp starts after registered camp ends
-            if (camp.getEndDate().isBefore(eachcamp.getStarDate()) || camp.getStarDate().isAfter(eachcamp.getEndDate())){
-                // no clash, check next camp
-                continue;
-            }
-            else{
-                // clash, return true
-                return true;
-            }
-        }
-
-        //checked all camps and no clash, return false
-        return false;
-    }
+   
 
     @Override
     public void menu(ArrayList<Camp> CampMasterList){
@@ -187,84 +171,29 @@ public class Student extends User {
                 case 3: //Register for a camp
                 //Show available camps first
                 CampManager.listCamp(available, false, "Available");
-                System.out.printf("---------------------------------------------------------\n");
-                //Select camp to register for
-                int campindex = Helper.readInt("Select Camp to register for : ");               
-                if (campindex > 0 && campindex <= available.size()){
-                    //Register as attendee or committee
-                    Camp target = available.get(campindex-1);
-                    if (LocalDate.now().isAfter(target.getRegisterDate())){System.out.println("The registration date for this camp has passed");}
-                    else{
-                        if(this.withdrawnCamps.contains(target) || this.registeredCamps.contains(target)){System.out.println("You have already registered or withdrawn from this camp");}
-                        else{
-                            if(checkClash(target)){System.out.println("The camp clashes with your registered camps");}
-                            else{
-                                System.out.printf("---------------------------------------------------------\n");
-                                System.out.printf("1. Attendee\n");
-                                System.out.printf("2. Committee\n");
-                                System.out.printf("---------------------------------------------------------\n");
-                                int answer = Helper.readInt("Register as : ");
-                                if (answer >= 1 && answer <= 2){
-                                    switch(answer){
-                                    case 1://as attendeee
-                                    if (target.getSlots() == 0){System.out.println("Attendee slots for this camp are full");}
-                                    else{
-                                        this.registeredCamps.add(target);
-                                        target.addStudent(this);
-                                        System.out.printf("Successfully registered as attendee for : %s\n",target.getName());
-                                    }
-                                    break;
-                                    case 2://as committee
-                                    if (this.committeeOf != null){System.out.println("You are already in the committee of a camp");}
-                                    else{
-                                        if (target.getRemainingCommittee() == 0){System.out.println("Committee slots for this camp are full");}
-                                        else{
-                                            this.committeeOf = target;
-                                            target.addCommittee(this);
-                                            System.out.printf("Successfully registered as committee member for : %s\n",target.getName());
-                                        }
-                                    }
-                                    break;
-                                    }   
-                                }
-                                else{System.out.println("Invalid choice");}
-                            }
-                        }
-                    }
-                    
-                    
-                } 
-                else{System.out.println("Invalid choice");}
+                CampManager.registerForCamp(this, available);
                 break;//Register for camp END
 
                 case 4://View registered camps
+                if (registeredCamps.isEmpty()){
+                    System.out.printf("You are not registered for any camps\n");
+                    break;
+                }
                 CampManager.listCamp(registeredCamps,false,"Registered");
                 break; //View registered camps END
 
                 case 5: // Withdraw from a camp
                 //Display registered Camps first
-                CampManager.listCamp(registeredCamps,false,"Registered");
-                System.out.printf("---------------------------------------------------------\n");
-                campindex = Helper.readInt("Select camp to withdrawn from : ");
-                
-                if (campindex > 0 && campindex <= registeredCamps.size()){
-                    Camp target = registeredCamps.get(campindex-1);
-                    if (this.committeeOf == target){
-                        System.out.printf("---------------------------------------------------------\n");
-                        System.out.printf("You cannot withdrawn from a camp you are a committee member of\n");
-                    }
-                    else{
-                        target.removeStudent(this); // Remove student from camp first
-                        this.withdrawnCamps.add(target); // add camp to withdrawn list
-                        this.registeredCamps.remove(target); // remove camp from registered list
-                        System.out.printf("Successfully withdrawn from camp : %s\n",target.getName());
-                    }
+                if (registeredCamps.isEmpty()){
+                    System.out.printf("You are not registered for any camps\n");
+                    break;
                 }
-                else{System.out.println("Invalid choice");}
+                CampManager.listCamp(registeredCamps,false,"Registered");
+                CampManager.withdrawnFromCamp(this);
                 break; // withdraw from a camp END
 
                 case 6://View withdrawn camps
-                CampManager.listCamp(registeredCamps,false,"Withdrawn");
+                CampManager.listCamp(withdrawnCamps,false,"Withdrawn");
                 break;//View withdrwan camps END
 
                 case 7://Submit Enquiry
@@ -274,10 +203,18 @@ public class Student extends User {
                 break; //submit enquiry END
 
                 case 8: //View Enquries Made
+                if (this.enquiriesMade.isEmpty()){
+                    System.out.printf("No enquiries made\n");
+                    break;
+                }
                 EnquiryManager.viewEnquiriesMade(this);
                 break; //View Enquiries END
 
                 case 9://Edit enquiry
+                if (this.enquiriesMade.isEmpty()){
+                    System.out.printf("No enquiries to edit\n");
+                    break;
+                }
                 //Show enquiries first
                 EnquiryManager.viewEnquiriesMade(this);
                 EnquiryManager.editEnquiry(this);
@@ -285,6 +222,10 @@ public class Student extends User {
                 break;//Edit Enquire END
 
                 case 10://Delete enquiry
+                if (this.enquiriesMade.isEmpty()){
+                    System.out.printf("No enquiries to delete\n");
+                    break;
+                }
                 //Show enquiries first
                 EnquiryManager.viewEnquiriesMade(this);
                 EnquiryManager.deleteEnquiry(this);
@@ -297,12 +238,20 @@ public class Student extends User {
                 break; // View Committee Details END
 
                 case 12: // View Enquiry made to your camp
+                if (this.committeeOf.getEnquiries().isEmpty()){
+                    System.out.printf("No enquiries have been made\n");
+                    break;
+                }
                 if(this.committeeOf !=null){
                     EnquiryManager.viewCampEnquiries(this.committeeOf);
                 }
                 break; //View Enquiry of camp END
 
                 case 13: // Answer Enquiry
+                if (this.committeeOf.getEnquiries().isEmpty()){
+                    System.out.printf("No enquiries to answer\n");
+                    break;
+                }
                 //First show enquiries made to your camp
                 if(this.committeeOf !=null){
                     EnquiryManager.viewCampEnquiries(this.committeeOf);
@@ -318,6 +267,10 @@ public class Student extends User {
 
                 case 15://View suggestions made
                 if(this.committeeOf !=null){
+                    if (this.suggestionsMade.isEmpty()){
+                        System.out.printf("No suggestions to view\n");
+                        break;
+                    }
                     SuggestionManager.viewSuggestionsMade(this);
                 }
                 break; //View suggestions made END
@@ -325,6 +278,10 @@ public class Student extends User {
                 case 16://Edit Suggestion
                 //Show suggestions made first
                 if(this.committeeOf !=null){
+                    if (this.suggestionsMade.isEmpty()){
+                        System.out.printf("No suggestions to edit\n");
+                        break;
+                    }
                     SuggestionManager.viewSuggestionsMade(this);
                     SuggestionManager.editSuggestion(this);
                 }
@@ -333,6 +290,10 @@ public class Student extends User {
                 case 17://Delete Suggestion
                 //Show suggestions made first
                 if(this.committeeOf !=null){
+                    if (this.suggestionsMade.isEmpty()){
+                        System.out.printf("No suggestions to delete\n");
+                        break;
+                    }
                     SuggestionManager.viewSuggestionsMade(this);
                     SuggestionManager.deleteSuggestion(this);
                 }
@@ -346,27 +307,6 @@ public class Student extends User {
         }  
     }
 
-    // //main for debugging & testing
-    // public static void main(String[] args){
-    //     Staff testStaff = new Staff("test staff","SCSE");
-
-    //     Camp testCamp1 = new Camp("test camp 1", "SCSE","test","test", LocalDate.of(2022, 12, 3),
-    //         LocalDate.of(2022, 12, 5),
-    //         LocalDate.of(2022, 11, 28), 10, testStaff, false);
-
-    //     Camp testCamp2 = new Camp("test camp 2", "SCSE","test","test", LocalDate.of(2022, 12, 4),
-    //         LocalDate.of(2022, 12, 4),
-    //         LocalDate.of(2022, 11, 28), 10, testStaff, false);    
-            
-    //     Student testStudent = new Student("test student", "SCSE");
-    //     testStudent.addRegisteredCamp(testCamp1);
-    //     testStudent.addRegisteredCamp(testCamp2);
-    //     testStudent.committeeOf = testCamp1;
-
-    //     System.out.println(testStudent.checkClash(testCamp2));
-    //     testStudent.viewRegisteredCamps();
-    //     //testStudent.menu();
-    // }
 }
 
 
