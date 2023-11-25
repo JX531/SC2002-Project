@@ -96,10 +96,18 @@ public class Camp {
     public String getUserGroup(){
         return this.userGroup;
     }
-    //no change usergroups
+
+    public void setUserGroup(String usergroup){
+        this.userGroup = usergroup;
+    }
+
     public Staff getStaffinCharge(){
         return this.staffInCharge;
     }
+    public void setStaffinCharge(Staff staff){
+        this.staffInCharge = staff;
+    }
+
     public String getDescription(){
         return this.description;
     }
@@ -110,23 +118,35 @@ public class Camp {
     public String getLocation(){
         return this.location;
     }
+    public void setLocation(String location){
+        this.location = location;
+    }
     public LocalDate getStarDate(){
         return this.startDate;
     }
-    // no change startdate
+    public void setStartDate(LocalDate startDate){
+        this.startDate = startDate;
+    }
 
     public LocalDate getEndDate(){
         return this.endDate;
     }
-    // no change enddate
+    public void setEndDate(LocalDate endDate){
+        this.endDate = endDate;
+    }
 
     public LocalDate getRegisterDate(){
         return this.registerDate;
     }  
-    // no change registerdate
+    public void setRegisterDate(LocalDate registerDate){
+        this.registerDate = registerDate;
+    }
 
     public int getSlots(){
         return this.slot;
+    }
+    public void setSlots(int slots){
+        this.slot = slots;
     }
 
     public int getRemainingCommittee(){
@@ -163,6 +183,9 @@ public class Camp {
     public Boolean getOwnSchool(){
         return this.ownSchool;
     }
+    public void setOwnSchool(Boolean ownSchool){
+        this.ownSchool = ownSchool;
+    }
     public void addEnquiry(Enquiry enquiry){
        this.enquiries.add(enquiry);
     }
@@ -180,6 +203,9 @@ public class Camp {
 
     public Boolean getVisibility(){
         return this.visibility;
+    }
+    public void setVisibility(Boolean visibility){
+        this.visibility = visibility;
     }
     
 }
