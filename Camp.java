@@ -89,7 +89,7 @@ public class Camp {
     public String getName(){
         return this.name;
     }
-    public void setname(String name){
+    public void setName(String name){
         this.name = name;
     }
 
@@ -121,7 +121,7 @@ public class Camp {
     public void setLocation(String location){
         this.location = location;
     }
-    public LocalDate getStarDate(){
+    public LocalDate getStartDate(){
         return this.startDate;
     }
     public void setStartDate(LocalDate startDate){
