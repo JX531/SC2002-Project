@@ -9,12 +9,21 @@ public class Student extends User {
     private int point = 0;
 
     //constructor
-    public Student(String userID, String faculty) {
-        super(userID, faculty);
+    public Student(String name, String userID, String faculty) {
+        super(name, userID, faculty);
         this.registeredCamps = new ArrayList<Camp>();
         this.withdrawnCamps = new ArrayList<Camp>();
         this.enquiriesMade = new ArrayList<Enquiry>();
         this.suggestionsMade = new ArrayList<Suggestion>();
+    }
+
+    //Overloaded
+    public Student(String name, String userID, String faculty, String password, ArrayList<Camp> registeredCamps, ArrayList<Camp> withdrawnCamps, ArrayList<Enquiry> enquiriesMade ,ArrayList<Suggestion> suggestionsMade) {
+        super(name, userID, faculty, password);
+        this.registeredCamps = registeredCamps;
+        this.withdrawnCamps = withdrawnCamps;
+        this.enquiriesMade = enquiriesMade;
+        this.suggestionsMade = suggestionsMade;
     }
 
     public void addRegisteredCamp(Camp camp) {
@@ -25,10 +34,17 @@ public class Student extends User {
         this.registeredCamps.remove(camp);
     }
 
+    public ArrayList<Camp> getRegisteredCamps(){
+        return this.registeredCamps;
+    }
     public void addWithdrawnCamp(Camp camp) {
         this.withdrawnCamps.add(camp);
     }
     //cannot remove withdrawn camps
+
+    public ArrayList<Camp> getWithdrawnCamps(){
+        return this.withdrawnCamps;
+    }
 
     //making enquiry
     public void addEnquiriesMade(Enquiry enquiry){
@@ -57,6 +73,10 @@ public class Student extends User {
     
     public void addPoint(){
         this.point += 1;
+    }
+
+    public void setPoint(int point){
+        this.point = point;
     }
 
     public void addSuggestionsMade(Suggestion suggestion){
@@ -105,7 +125,7 @@ public class Student extends User {
         while (choice != 0){
             //User details
             System.out.println("---------------------------------------------");
-            System.out.printf("Username    : %s\n", this.getID());
+            System.out.printf("Username    : %s\n", this.getName());
             System.out.printf("Faculty     : %s\n", this.getFaculty());
             if (this.committeeOf != null){
                 System.out.printf("Committe of : %s\n", this.getCommitteeOf().getName());
@@ -166,7 +186,7 @@ public class Student extends User {
 
                 case 3: //Register for a camp
                 //Show available camps first
-                FilterLister.listCamp(available, true, "Available");
+                FilterLister.listCamp(available, false, "Available");
                 System.out.printf("---------------------------------------------------------\n");
                 //Select camp to register for
                 int campindex = Helper.readInt("Select Camp to register for : ");
@@ -250,7 +270,7 @@ public class Student extends User {
 
                 case 7://Submit Enquiry
                 //Show camps to submit enquiries to
-                FilterLister.listCamp(registeredCamps,true,"All");
+                FilterLister.listCamp(CampMasterList,false,"All");
                 EnquiryManager.submitEnquiry(this, CampMasterList);
                 break; //submit enquiry END
 
