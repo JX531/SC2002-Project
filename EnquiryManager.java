@@ -18,7 +18,7 @@ public class EnquiryManager {
                 //add the enquiry to the target camp's enquiry list
                 target.addEnquiry(new_enquiry);
                 //add the enquiry to the user's enquiries made list
-                user.getEnquiriesMade().add(new_enquiry);
+                user.addEnquiriesMade(new_enquiry);
                 System.out.printf("Successfully sent Enquiry to : %s\n", target.getName());
             }
             //user is committee member and trying to send enquiry to their own camp
