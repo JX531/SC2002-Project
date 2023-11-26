@@ -1,6 +1,6 @@
 CHERN
 YCHERN@e.ntu.edu.sg
-123
+password
 SCSE
 
 
