@@ -59,13 +59,13 @@ public class Staff extends User {
                     CampManager.createCamp(this,CampMasterList);
                     break;
                 case 3:
-                    CampManager.editCamp(this,CampMasterList);
+                    CampManager.editCamp(this);
                     break;
                 case 4:
                     CampManager.deleteCamp(this,CampMasterList);
                     break;
                 case 5:
-                    CampManager.toggleCampVisibility(this,CampMasterList);
+                    CampManager.toggleCampVisibility(this);
                     break;
                 case 6:
                     viewAllCamps(CampMasterList);
