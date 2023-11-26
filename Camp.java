@@ -112,7 +112,7 @@ public class Camp {
     this.visibility = true;
     }
 
-    /** Overloaded constructor to aloow input for all atributes for new camp
+    /** Overloaded constructor to allow input for all attributes for new camp
      * @param name name of camp
      * @param userGroup user group the camp is open to
      * @param location location of camp
