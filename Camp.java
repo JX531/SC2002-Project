@@ -107,6 +107,7 @@ public class Camp {
         this.slot = 0;
         this.remainingCommittee = slot;
     }
+    
     this.studentList = new ArrayList<Student>();
     this.committee = new ArrayList<Student>();
     this.staffInCharge = staffInCharge;
