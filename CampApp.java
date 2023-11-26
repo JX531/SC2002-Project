@@ -3,12 +3,12 @@ import java.util.ArrayList;;
 public class CampApp {
 	
 	public static void main(String[] args) {
-		ArrayList<Camp> camps = StorageManager.readCamps();
-		ArrayList<Staff> staff = StorageManager.readStaff();
-		ArrayList<Student> students = StorageManager.readStudents();
+		ArrayList<Camp> camps = new ArrayList<Camp>();
+		ArrayList<Staff> staff = new ArrayList<Staff>();
+		ArrayList<Student> students = new ArrayList<Student>();
 
 		while (true) {
-			students.add(new Student("Bob", "bob@e.ntu.sg", "SCSE"));
+			StorageManager.loadData(camps, staff, students);
 			String username = Helper.readString("Login(exit to exit) >");
 			if (username.equalsIgnoreCase("exit")) break;
 			
@@ -23,9 +23,7 @@ public class CampApp {
 					if (i.checkPassword(Helper.readString("Enter password >"))) i.menu(camps);
 				}
 			}
-			StorageManager.saveCamps(camps);
-			StorageManager.saveStaff(staff);
-			StorageManager.saveStudents(students);
+			StorageManager.saveData(camps, staff, students);
 		}
 	}
 }
