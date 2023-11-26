@@ -6,8 +6,16 @@ import java.time.LocalDate;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 
+/**
+ * Manager class that manages operations for storage and loading of data to/from txt files for data persistancy
+ */
 public class StorageManager {
 
+	/**Loads exiting data from files into CAMS
+	 * @param camps master list of camps to load data into
+	 * @param staff master list of staff to load data into
+	 * @param students master list of students to load data into
+	 */
 	public static void loadData(ArrayList<Camp> camps, ArrayList<Staff> staff, ArrayList<Student> students) {
 		ArrayList<String> studentData = readData("data/studentData.txt");
 		ArrayList<String> staffData = readData("data/staffData.txt");
@@ -148,7 +156,12 @@ public class StorageManager {
 		}
 		
 	}
-	
+
+	/**Saves existing data from CAMs into .txt files
+	 * @param camps masterlist of camps to save data from
+	 * @param staff masterlist of staff to save data from
+	 * @param students masterlist of students to save data from
+	 */
 	public static void saveData(ArrayList<Camp> camps, ArrayList<Staff> staff, ArrayList<Student> students) {
 		ArrayList<String> data = new ArrayList<String>();
 		//data.add("name");
@@ -301,7 +314,11 @@ public class StorageManager {
 		writeData("data/enquiresData.txt", data);
 		data.clear();
 	}
-	
+
+	/**reads a file and compiles it into an array list to be loaded into CAMs
+	 * @param name path of file
+	 * @return array list of loaded data
+	 */
 	private static ArrayList<String> readData(String name) {
 		ArrayList<String> data = new ArrayList<String>();
 		try {
@@ -316,7 +333,11 @@ public class StorageManager {
 		}
 		return data;
 	}
-	
+
+	/**write to a txt file from CAMs to store data
+	 * @param name path of the storage txt file
+	 * @param data data to write
+	 */
 	private static void writeData(String name, ArrayList<String> data) {
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(name, false));
@@ -329,12 +350,20 @@ public class StorageManager {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**parses date data from format saved in txt into LocalDate
+	 * @param date date to be parsed
+	 * @return LocalDate format date
+	 */
 	private static LocalDate parseDate(String date) {
 		String[] dateArr = date.split(";");
 		return LocalDate.of(Integer.parseInt(dateArr[0]), Integer.parseInt(dateArr[1]), Integer.parseInt(dateArr[2]));
 	}
-	
+
+	/**Encodes LocalDate into a format to be stored into txt files
+	 * @param date date to be encoded
+	 * @return encoded date to be stored
+	 */
 	private static String encodeDate(LocalDate date) {
 		String out = "";
 		out += Integer.toString(date.getYear());
@@ -345,21 +374,36 @@ public class StorageManager {
 		out += ";";
 		return out;
 	}
-	
+
+	/**Find a student with the matching name from a list of students
+	 * @param students list of students to search through
+	 * @param name name of student being searched
+	 * @return  the student object
+	 */
 	private static Student searchStudent(ArrayList<Student> students, String name) {
 		for (Student i : students) {
 			if (i.getName().equals(name)) return i; 
 		}
 		return null;
 	}
-	
+
+	/**Find a staff with the matching name from a list of staff
+	 * @param staff list of staff to search through
+	 * @param name name of staff being searched
+	 * @return  the staff object
+	 */
 	private static Staff searchStaff(ArrayList<Staff> staff, String name) {
 		for (Staff i : staff) {
 			if (i.getName().equals(name)) return i; 
 		}
 		return null;
 	}
-	
+
+	/**Find a camp with the matching name from  a list of camps
+	 * @param camps list of camps to search through
+	 * @param name name of camp being searched
+	 * @return the camp object
+	 */
 	private static Camp searchCamp(ArrayList<Camp> camps, String name) {
 		for (Camp i : camps) {
 			if (i.getName().equals(name)) return i; 
