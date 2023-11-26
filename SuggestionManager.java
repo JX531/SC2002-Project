@@ -2,8 +2,8 @@
  * Class used to manage suggestions
  */
 public class SuggestionManager {
-    /**Submit a suggestion
-     * @param user the user that is submitting the suggestion
+    /** Submit a suggestion
+     * @param user user that is submitting the suggestion
      */
     //For committee members (Student class)
     public static void submitSuggestion(Student user){
@@ -17,7 +17,7 @@ public class SuggestionManager {
         user.addSuggestionsMade(new_suggestion);
     }
 
-    /**View suggestions made by user
+    /** View suggestions made by user
      * @param user user that is viewing their suggestions made
      */
     //For committee members (Student class)
@@ -38,7 +38,7 @@ public class SuggestionManager {
         }
     }
 
-    /**Edit a suggestion made by user
+    /** Edit a suggestion made by user
      * @param user user that is trying to edit their suggestion
      */
     //For committee members (Student class)
@@ -64,7 +64,7 @@ public class SuggestionManager {
         else{System.out.println("Invalid choice");}
     }
 
-    /**Delete a suggestion made by user
+    /** Delete a suggestion made by user
      * @param user user that is trying to delete their suggestion
      */
     //For committee members (Student class)
@@ -92,7 +92,10 @@ public class SuggestionManager {
         else{System.out.println("Invalid choice");}
     }
 
-    
+
+    /** View suggestions made for a camp
+     * @param camp camp that is selected to view suggestions
+     */
     public static void viewSuggestionsofCamp(Camp camp){
         // Check if there are suggestions for the selected camp
         if (camp.getSuggestions().isEmpty()) {
@@ -111,6 +114,10 @@ public class SuggestionManager {
                                (suggestion.getApproved() ? "Approved" : "Not Approved"));
         }
     }
+
+    /** Process a suggestion from a camp
+     * @param camp camp that is selected to process suggestions
+     */
     public static void processSuggestionsofCamp(Camp camp){
         int suggestionIndex = Helper.readInt("Select a suggestion to process")-1;
         if (suggestionIndex < 0 || suggestionIndex >= camp.getSuggestions().size()) {
