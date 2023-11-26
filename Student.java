@@ -107,7 +107,7 @@ public class Student extends User {
                 available.add(eachcamp);
             }
         }
-        System.out.printf("debug size of available list = %d\n",available.size());
+        
         //While not logged out
         while (choice != 0){
             //User details
