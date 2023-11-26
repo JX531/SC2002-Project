@@ -103,6 +103,10 @@ public class Camp {
     this.registerDate = registerDate;
     this.slot = slot-10;
     this.remainingCommittee = 10;
+    if (this.slot <0){
+        this.slot = 0;
+        this.remainingCommittee = slot;
+    }
     this.studentList = new ArrayList<Student>();
     this.committee = new ArrayList<Student>();
     this.staffInCharge = staffInCharge;
