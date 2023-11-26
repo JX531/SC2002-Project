@@ -6,9 +6,13 @@ public class CampApp {
 		ArrayList<Camp> camps = new ArrayList<Camp>();
 		ArrayList<Staff> staff = new ArrayList<Staff>();
 		ArrayList<Student> students = new ArrayList<Student>();
-
+		StorageManager.loadData(camps, staff, students);
 		while (true) {
-			StorageManager.loadData(camps, staff, students);
+			
+			students.add(new Student("CHERN","YCHERN@e.ntu.edu.sg","SCSE"));
+			System.out.println(students.size());
+			StorageManager.saveData(camps, staff, students);
+			
 			String username = Helper.readString("Login(exit to exit) >");
 			if (username.equalsIgnoreCase("exit")) break;
 			
@@ -23,7 +27,7 @@ public class CampApp {
 					if (i.checkPassword(Helper.readString("Enter password >"))) i.menu(camps);
 				}
 			}
-			StorageManager.saveData(camps, staff, students);
+			
 		}
 	}
 }

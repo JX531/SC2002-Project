@@ -4,8 +4,8 @@ public class Student extends User {
     private ArrayList<Camp> withdrawnCamps;
     private ArrayList<Enquiry> enquiriesMade;
     private ArrayList<Suggestion> suggestionsMade;
-    private Camp committeeOf = null;
-    private int point = 0;
+    private Camp committeeOf;
+    private int point;
 
     //constructor
     public Student(String name, String userID, String faculty) {
@@ -14,15 +14,19 @@ public class Student extends User {
         this.withdrawnCamps = new ArrayList<Camp>();
         this.enquiriesMade = new ArrayList<Enquiry>();
         this.suggestionsMade = new ArrayList<Suggestion>();
+        this.committeeOf = null;
+        this.point = 0;
     }
 
     //Overloaded
-    public Student(String name, String userID, String faculty, String password, ArrayList<Camp> registeredCamps, ArrayList<Camp> withdrawnCamps, ArrayList<Enquiry> enquiriesMade ,ArrayList<Suggestion> suggestionsMade) {
+    public Student(String name, String userID, String faculty, String password, ArrayList<Camp> registeredCamps, ArrayList<Camp> withdrawnCamps, ArrayList<Enquiry> enquiriesMade ,ArrayList<Suggestion> suggestionsMade, Camp committeeOf, int point) {
         super(name, userID, faculty, password);
         this.registeredCamps = registeredCamps;
         this.withdrawnCamps = withdrawnCamps;
         this.enquiriesMade = enquiriesMade;
         this.suggestionsMade = suggestionsMade;
+        this.committeeOf = committeeOf;
+        this.point = point;
     }
 
     public void addRegisteredCamp(Camp camp) {
