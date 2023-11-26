@@ -7,10 +7,25 @@ public class CampApp {
 		ArrayList<Staff> staff = new ArrayList<Staff>();
 		ArrayList<Student> students = new ArrayList<Student>();
 		StorageManager.loadData(camps, staff, students);
+//		students.add(new Student("CHERN","YCHERN@e.ntu.edu.sg","SCSE"));
+//		students.add(new Student("KOH", "KOH1@e.ntu.edu.sg", "ADM"));
+//		students.add(new Student("BRANDON", "BR015@e.ntu.edu.sg", "EEE"));
+//		students.add(new Student("CALVIN", "CT113@e.ntu.edu.sg", "SCSE"));
+//		students.add(new Student("CHAN", "YCN019@e.ntu.edu.sg", "NBS"));
+//		students.add(new Student("DENISE", "DL007@e.ntu.edu.sg", "SCSE"));
+//		students.add(new Student("DONG", "DON84@e.ntu.edu.sg", "ADM"));
+//		students.add(new Student("ERNEST", "ELI34@e.ntu.edu.sg", "EEE"));
+//		students.add(new Student("LEE", "LE51@e.ntu.edu.sg", "SCSE"));
+//		students.add(new Student("LIU", "SL22@e.ntu.edu.sg", "NBS"));
+//		students.add(new Student("RAWALL", "AKY013@e.ntu.edu.sg", "SSS"));
+//		
+//		staff.add(new Staff("Madhukumar", "HUKUMAR@NTU.EDU.SG", "SCSE"));
+//		staff.add(new Staff("Alexei", "OURIN@ntu.edu.sg", "ADM"));
+//		staff.add(new Staff("Chattopadhyay", "UPAM@NTU.EDU.SG", "EEE"));
+//		staff.add(new Staff("Datta", "ANWIT@NTU.EDU.SG", "SCSE"));
+//		staff.add(new Staff("Arvind", "ARVI@NTU.EDU.SG", "NBS"));
+		
 		while (true) {
-			
-			students.add(new Student("CHERN","YCHERN@e.ntu.edu.sg","SCSE"));
-			System.out.println(students.size());
 			StorageManager.saveData(camps, staff, students);
 			
 			String username = Helper.readString("Login(exit to exit) >");
