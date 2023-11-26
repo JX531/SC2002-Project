@@ -1,6 +1,14 @@
 import java.util.ArrayList;
+
+/**
+ * Class used to manage enquiries
+ */
 public class EnquiryManager {
 
+    /** Submit an enquiry
+     * @param user user that is submitting the enquiry
+     * @param CampMasterList camp list that shows all the camps
+     */
     //For normal students
     //Need to see all camps so pass in both the user and CampMasterList
     public static void submitEnquiry(Student user, ArrayList<Camp> CampMasterList){ 
@@ -30,6 +38,9 @@ public class EnquiryManager {
         else{System.out.println("Invalid choice");}
     }
 
+    /** View enquiries made by user
+     * @param user user that is viewing their enquiries
+     */
     //For normal students
     public static void viewEnquiriesMade(Student user){
         System.out.printf("Enquiries Made\n");
@@ -50,6 +61,9 @@ public class EnquiryManager {
         }
     }
 
+    /** Edit an enquiry made by user
+     * @param user user that is trying to edit their enquiry
+     */
     //For normal students
     public static void editEnquiry(Student user){    
         //Ask for index of enquiry in user's enquiries made list to edit   
@@ -75,6 +89,9 @@ public class EnquiryManager {
         else{System.out.println("Invalid choice");}
     }
 
+    /** Delete an enquiry made by user
+     * @param user user that is trying to delete their enquiry
+     */
     //For normal students
     public static void deleteEnquiry(Student user){
         //Ask for index of enquiry in user's enquiries made list to delete   
@@ -100,6 +117,9 @@ public class EnquiryManager {
         else{System.out.println("Invalid choice");}
     }
 
+    /** View enquiries for a camp
+     * @param camp camp that is selected to view enquiries
+     */
     //For both committee members and staff
     public static void viewCampEnquiries(Camp camp){
         //Enquiries made to the camp
@@ -118,6 +138,9 @@ public class EnquiryManager {
     }
 
 
+    /** Answer an enquiry made
+     * @param camp camp that is selected to answer enquiries
+     */
     //For both committee members and staff
     public static void answerEnquiry(Camp camp){
             //get index of enquiry from the enquiry index of the camp user is a committee member in
