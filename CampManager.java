@@ -346,7 +346,7 @@ public class CampManager {
         System.out.println("New camp created successfully!");
     }
 
-    public static void editCamp(Staff user, ArrayList<Camp> CampMasterList) {
+    public static void editCamp(Staff user) {
         if (user.getCampsOwned().isEmpty()) {
             System.out.println("You do not own any camps to edit.");
             return;
@@ -555,7 +555,7 @@ public class CampManager {
         System.out.println("Camp deleted successfully: " + campToDelete.getName());
     }
 
-    public static void toggleCampVisibility(Staff user,ArrayList<Camp> CampMasterList) {
+    public static void toggleCampVisibility(Staff user) {
 
         // Display the list of camps owned by the staff member
         System.out.println("Select a camp to toggle its visibility:");
