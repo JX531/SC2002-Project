@@ -1,12 +1,8 @@
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Staff extends User {
 
     private ArrayList<Camp> campsOwned;
-    private Scanner scanner = new Scanner(System.in);
 
     // Constructor
     public Staff(String name, String userID, String faculty) {

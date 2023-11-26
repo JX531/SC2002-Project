@@ -24,31 +24,21 @@ public abstract class User {
     public String getID() {
         return this.userID;
     }
-    public void setID(String ID){
-        this.userID = ID;
-    }
 
     public String getName(){
         return this.Name;
     }
-    public void setName(String name){
-        this.Name = name;
-    }
-    public String getPassword(){
-        return this.password;
-    }
+    
     public void setPassword(String password) {
         this.password = password;
     }
+    
     public boolean checkPassword(String password) {
         return (this.password.equals(password));
     }
 
     public String getFaculty() {
         return this.faculty;
-    }
-    public void setFaculty(String faculty){
-        this.faculty = faculty;
     }
 
     public abstract void menu(ArrayList<Camp> CampMasterList);

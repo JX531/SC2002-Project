@@ -1,4 +1,3 @@
-import java.time.LocalDate;
 import java.util.ArrayList;
 public class Student extends User {
     private ArrayList<Camp> registeredCamps;
