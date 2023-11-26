@@ -29,6 +29,10 @@ public abstract class User {
         return this.Name;
     }
     
+    public String getPassword() {
+		return this.password;
+	}
+    
     public void setPassword(String password) {
         this.password = password;
     }
