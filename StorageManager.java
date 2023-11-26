@@ -71,7 +71,7 @@ public class StorageManager {
 			temp[12] = campData.remove(0); //ownSchool
 			temp[13] = campData.remove(0); //visibility
 			campData.remove(0);
-			staffRaw.add(temp);
+			campRaw.add(temp);
 		}
 		for (String[] i : campRaw) {
 			ArrayList<Student> studentList = new ArrayList<Student>();
