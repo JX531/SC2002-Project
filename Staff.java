@@ -219,6 +219,7 @@ public class Staff extends User {
         }
 
         // Display enquiries for the selected camp
+        EnquiryManager.viewCampEnquiries(selectedCamp);
         EnquiryManager.answerEnquiry(selectedCamp);
     }
 
