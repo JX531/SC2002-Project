@@ -69,7 +69,7 @@ public class Helper {
             case 2:
                 LocalDate startDate = readDate("Enter start date (dd-mm-yyyy): ");
                 camps.stream()
-                        .filter(camp -> camp.getStarDate().equals(startDate) || camp.getStarDate().isAfter(startDate))
+                        .filter(camp -> camp.getStartDate().equals(startDate) || camp.getStartDate().isAfter(startDate))
                         .forEach(Helper::printCamp);
                 break;
             default:
@@ -82,7 +82,7 @@ public class Helper {
     private static void printCamp(Camp camp) {
         System.out.println("Camp Name: " + camp.getName());
         System.out.println("Location: " + camp.getLocation());
-        System.out.println("Start Date: " + dateFormatter.format(camp.getStarDate()));
+        System.out.println("Start Date: " + dateFormatter.format(camp.getStartDate()));
         // Other details can be added here
     }
     

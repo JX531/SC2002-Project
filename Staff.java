@@ -205,7 +205,7 @@ public class Staff extends User {
             System.out.println("---------------------------------------------------------");
             System.out.println("Camp Report              : " + camp.getName());
             System.out.println("Location                 : " + camp.getLocation());
-            System.out.println("Dates                    : " + camp.getStarDate() + " to " + camp.getEndDate());
+            System.out.println("Dates                    : " + camp.getStartDate() + " to " + camp.getEndDate());
             System.out.println("Registration End Date    : " + camp.getRegisterDate());
             System.out.println("Number of Slots          : " + camp.getSlots());
             System.out.println("Committee Slots Remaining: " + camp.getRemainingCommittee());

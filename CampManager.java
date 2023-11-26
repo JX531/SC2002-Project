@@ -22,7 +22,7 @@ public class CampManager {
     //Sort input camp list by start date with earliest first
     private static void sortCampsDate(ArrayList<Camp> camplist){
         //create comparator
-        Comparator<Camp> dateComparator = Comparator.comparing(Camp::getStarDate);
+        Comparator<Camp> dateComparator = Comparator.comparing(Camp::getStartDate);
         //sort by comparator
         Collections.sort(camplist, dateComparator);
     }
@@ -95,7 +95,7 @@ public class CampManager {
             System.out.printf("Location                  : %s\n",eachcamp.getLocation());
             System.out.printf("Attendee Slots Remaining  : %s\n",eachcamp.getSlots());
             System.out.printf("Committee Slots Remaining : %s\n",eachcamp.getRemainingCommittee());
-            System.out.printf("Starts                    : %s\n",eachcamp.getStarDate());
+            System.out.printf("Starts                    : %s\n",eachcamp.getStartDate());
             System.out.printf("Ends                      : %s\n",eachcamp.getEndDate());
             System.out.printf("Register before           : %s\n",eachcamp.getRegisterDate());
             System.out.printf("Description               : %s\n",eachcamp.getDescription());
@@ -110,7 +110,7 @@ public class CampManager {
             System.out.printf("Location                  : %s\n",eachcamp.getLocation());
             System.out.printf("Attendee Slots Remaining  : %s\n",eachcamp.getSlots());
             System.out.printf("Committee Slots Remaining : %s\n",eachcamp.getRemainingCommittee());
-            System.out.printf("Starts                    : %s\n",eachcamp.getStarDate());
+            System.out.printf("Starts                    : %s\n",eachcamp.getStartDate());
             System.out.printf("Ends                      : %s\n",eachcamp.getEndDate());
             System.out.printf("Register before           : %s\n",eachcamp.getRegisterDate());
             System.out.printf("Description               : %s\n",eachcamp.getDescription());
@@ -159,7 +159,7 @@ public class CampManager {
                 }
             }
             if (filterType == 3){
-                if(filterCheck(filterdate, eachcamp.getStarDate())){
+                if(filterCheck(filterdate, eachcamp.getStartDate())){
                     printCampDetails(i,eachcamp);
                     i++;
                 }
@@ -201,7 +201,7 @@ public class CampManager {
             //print camp details with index
             if (filterType == 1){if(filterCheck(filterString, eachcamp.getName())){printCampDetails(i,eachcamp);i++;}}
             if (filterType == 2){if(filterCheck(filterString, eachcamp.getLocation())){printCampDetails(i,eachcamp);i++;}}
-            if (filterType == 3){if(filterCheck(filterdate, eachcamp.getStarDate())){printCampDetails(i,eachcamp);i++;}}
+            if (filterType == 3){if(filterCheck(filterdate, eachcamp.getStartDate())){printCampDetails(i,eachcamp);i++;}}
             if (filterType == 4 || filterType == -1){printCampDetails(i,eachcamp);i++;}
         }
     }
@@ -390,7 +390,7 @@ public class CampManager {
         // Process the editing based on user choice
         switch (editChoice) {
             case 1:
-                selectedCamp.setname(Helper.readString("Enter the new name: "));
+                selectedCamp.setName(Helper.readString("Enter the new name: "));
                 break;
             case 2:
                 selectedCamp.setDescription(Helper.readString("Enter the new description: "));
@@ -448,7 +448,7 @@ public class CampManager {
      private static Boolean checkClash(Student user, Camp camp){
         for (Camp eachcamp : user.getRegisteredCamps()){
             //target camp ends before registered camp starts or target camp starts after registered camp ends
-            if (camp.getEndDate().isBefore(eachcamp.getStarDate()) || camp.getStarDate().isAfter(eachcamp.getEndDate())){
+            if (camp.getEndDate().isBefore(eachcamp.getStartDate()) || camp.getStartDate().isAfter(eachcamp.getEndDate())){
                 // no clash, check next camp
                 continue;
             }
