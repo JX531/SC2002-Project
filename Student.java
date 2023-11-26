@@ -1,12 +1,40 @@
-import java.util.ArrayList;
-public class Student extends User {
-    private ArrayList<Camp> registeredCamps;
-    private ArrayList<Camp> withdrawnCamps;
-    private ArrayList<Enquiry> enquiriesMade;
-    private ArrayList<Suggestion> suggestionsMade;
-    private Camp committeeOf;
-    private int point;
 
+import java.util.ArrayList;
+
+/**
+ * class that represents a student
+ */
+public class Student extends User {
+    /**
+     * list of camps student is registered for
+     */
+    private ArrayList<Camp> registeredCamps;
+    /**
+     * list of camps student has withdrawn from
+     */
+    private ArrayList<Camp> withdrawnCamps;
+    /**
+     * list of enquiries student has mode
+     */
+    private ArrayList<Enquiry> enquiriesMade;
+    /**
+     * list of suggestions student has made. Only used for committee members.
+     */
+    private ArrayList<Suggestion> suggestionsMade;
+    /**
+     * Camp that student is a committee of, allows for committee member functions
+     */
+    private Camp committeeOf = null;
+    /**
+     * Points a student has. Only used for committee members.
+     */
+    private int point = 0;
+
+    /**Constructor to create a new student
+     * @param name student's name
+     * @param userID student's userID
+     * @param faculty student's faculty
+     */
     //constructor
     public Student(String name, String userID, String faculty) {
         super(name, userID, faculty);
@@ -14,10 +42,18 @@ public class Student extends User {
         this.withdrawnCamps = new ArrayList<Camp>();
         this.enquiriesMade = new ArrayList<Enquiry>();
         this.suggestionsMade = new ArrayList<Suggestion>();
-        this.committeeOf = null;
-        this.point = 0;
     }
 
+    /**Overloaded constructor to allow for setting of every attribute
+     * @param name student's name
+     * @param userID student's userID
+     * @param faculty student's faculty
+     * @param password student's password
+     * @param registeredCamps student's list of registered camps
+     * @param withdrawnCamps student's list of withdrawn camps
+     * @param enquiriesMade student's list of enquiries made
+     * @param suggestionsMade student's list of suggestions made
+     */
     //Overloaded
     public Student(String name, String userID, String faculty, String password, ArrayList<Camp> registeredCamps, ArrayList<Camp> withdrawnCamps, ArrayList<Enquiry> enquiriesMade ,ArrayList<Suggestion> suggestionsMade, Camp committeeOf, int point) {
         super(name, userID, faculty, password);
@@ -29,74 +65,123 @@ public class Student extends User {
         this.point = point;
     }
 
+    /**adder for student's registered camps list
+     * @param camp camp to be added to student's registered camps list
+     */
     public void addRegisteredCamp(Camp camp) {
         this.registeredCamps.add(camp);
     }
 
+    /**remover for student's registered camps list
+     * @param camp camp to be removed from student's registered camps list
+     */
     public void removeRegisteredCamp(Camp camp) {
         this.registeredCamps.remove(camp);
     }
 
+    /**getter for student's registered camps list
+     * @return student's registered camps list
+     */
     public ArrayList<Camp> getRegisteredCamps(){
         return this.registeredCamps;
     }
+
+    /**adder for student's withdrawn camps list
+     * @param camp camp to be added to student's withdrawn camps list
+     */
     public void addWithdrawnCamp(Camp camp) {
         this.withdrawnCamps.add(camp);
     }
     //cannot remove withdrawn camps
 
+    /**getter for student's withdrawn camps list
+     * @return student's withdrawn camps list
+     */
     public ArrayList<Camp> getWithdrawnCamps(){
         return this.withdrawnCamps;
     }
 
+    /**adder for student's enquiries made list
+     * @param enquiry enquiry to be added to student's enquiries made list
+     */
     //making enquiry
     public void addEnquiriesMade(Enquiry enquiry){
         this.enquiriesMade.add(enquiry);
     }
 
+    /**remover for student's enquiries made list
+     * @param enquiry enquiry to be removed from student's enquiries made list
+     */
     //deleting enquiry
     public void removeEnquiriesMade(Enquiry enquiry){
         this.enquiriesMade.remove(enquiry);
     }
+
+    /**getter for student's enquiries made list
+     * @return student's enquiries made list
+     */
     public ArrayList<Enquiry> getEnquiriesMade(){
         return this.enquiriesMade;
     }
 
+    /**setter for student's committee camp
+     * @param camp camp to set the student's committee camp as
+     */
     public void setCommitteeOf(Camp camp) {
         this.committeeOf = camp;
     }
-    
+
+    /**getter for student's committee camp
+     * @return the student's committee camp
+     */
     public Camp getCommitteeOf(){
         return this.committeeOf;
     }
 
+    /**getter for student's points
+     * @return student's points
+     */
     public int getPoint(){
         return this.point;
     }
-    
+
+    /**function that adds a point to student's point
+     *
+     */
     public void addPoint(){
         this.point += 1;
     }
 
-    public void setPoint(int point){
-        this.point = point;
-    }
+    /**setter for student's points
+     * @param point new point value to set student's points as
+     */
 
+
+    /**adder for student's suggestions made list
+     * @param suggestion suggestion to be added to student's suggestions made list
+     */
     public void addSuggestionsMade(Suggestion suggestion){
         this.suggestionsMade.add(suggestion);
     }
 
+    /**remover for student's suggestions made list
+     * @param suggestion suggestion to be removed from student's suggestions made list
+     */
     public void removeSuggestionsMade(Suggestion suggestion){
         this.suggestionsMade.remove(suggestion);
     }
 
+    /**getter for student's suggestions made list
+     * @return student's suggestions made list
+     */
     public ArrayList<Suggestion> getSuggestionsMade(){
         return this.suggestionsMade;
     }
-    
 
-   
 
+    /**Menu to provide functionality to the student class
+     * @param CampMasterList master list of all camps created to be used in menu operations
+     */
     @Override
     public void menu(ArrayList<Camp> CampMasterList){
         int choice = -1;
@@ -107,7 +192,7 @@ public class Student extends User {
                 available.add(eachcamp);
             }
         }
-        
+
         //While not logged out
         while (choice != 0){
             //User details
@@ -309,6 +394,7 @@ public class Student extends User {
             }   
         }  
     }
+
 
 }
 
