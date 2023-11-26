@@ -278,9 +278,12 @@ public class StorageManager {
 				data.add(i2.getSentTo().getName());
 				data.add("");
 			}
-			writeData("data/suggestionData.txt", data);
-			data.clear();
 			
+		}
+		writeData("data/suggestionData.txt", data);
+		data.clear();
+		
+		for (Camp i : camps) {
 			for (Enquiry i2: i.getEnquiries()) {
 				//data.add("question");
 				//data.add("answer");
@@ -288,14 +291,15 @@ public class StorageManager {
 				//data.add("createdBy");
 				//data.add("");
 				data.add(i2.getQuestion());
-				data.add(i2.getAnswer());
+				if (i2.getAnswer() == null) data.add("");
+				else data.add(i2.getAnswer());
 				data.add(i2.getSentTo().getName());
 				data.add(i2.getCreatedBy().getName());
 				data.add("");
 			}
-			writeData("data/enquiresData.txt", data);
-			data.clear();
 		}
+		writeData("data/enquiresData.txt", data);
+		data.clear();
 	}
 	
 	private static ArrayList<String> readData(String name) {
